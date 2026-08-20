@@ -1,143 +1,145 @@
-// Motor de reglas: evalúa cada empresa contra las reglas activas del panel
-// y agrega los resultados en las métricas de cartera.
+// Motor de reglas: evalúa cada cliente contra las reglas activas del panel
+// y agrega los resultados en las métricas de la cartera.
 
-const LGD = 0.45; // pérdida dada la mora, supuesto estándar (45%)
-const BASE_LIMIT_MULTIPLIER = 0.5; // cupo = 50% del ingreso mensual declarado
-const REDUCED_LIMIT_MULTIPLIER = 0.5; // penalización cuando se "reduce línea"
+const REDUCED_VALUE_MULTIPLIER = 0.5; // penalización cuando se "reduce" el valor incremental estimado
+
+// Supuesto simple de valor incremental mensual (USD) por módulo, ajustado
+// por tamaño de empresa. Es una estimación de demo, no un dato real.
+const MODULE_MONTHLY_VALUE = {
+  contabilidad: 35,
+  facturacion: 25,
+  nomina: 55,
+  pagos: 30,
+  fiscal: 28,
+};
+
+const SIZE_MULTIPLIER = {
+  micro: 1,
+  pequena: 2,
+  mediana: 4,
+  grande: 8,
+};
 
 function getCurrentRules() {
   return {
-    utilizacionMaxima: Number(document.getElementById('utilizacion-maxima').value),
-    diasMora: Number(document.getElementById('dias-mora').value),
-    concentracionGasto: Number(document.getElementById('concentracion-gasto').value),
     antiguedadMinima: Number(document.getElementById('antiguedad-minima').value),
-    accionFraude: document.getElementById('accion-fraude').value,
-    tratamientoInfoIncompleta: document.getElementById('info-incompleta').value,
+    actividadMinima: Number(document.getElementById('actividad-minima').value),
+    modulosMinimos: Number(document.getElementById('modulos-minimos').value),
+    diasInactividadMaxima: Number(document.getElementById('dias-inactividad-maxima').value),
+    accionAlertaSoporte: document.getElementById('accion-alerta-soporte').value,
+    tratamientoDatosIncompletos: document.getElementById('tratamiento-datos-incompletos').value,
   };
 }
 
-// Combina las señales de riesgo de una empresa en una probabilidad de
-// incumplimiento (PD) aproximada, entre 2% y 32%.
-function estimatePd(company) {
-  const riskScore =
-    0.25 * (1 - company.payment_history / 100) +
-    0.20 * (company.days_late / 38) +
-    0.15 * (company.utilization / 100) +
-    0.15 * (company.concentration / 100) +
-    0.10 * (company.flow_variability / 50) +
-    0.10 * (company.fraud_alert === 'alta' ? 1 : company.fraud_alert === 'media' ? 0.5 : 0) +
-    0.05 * (company.identity_signal === 'alerta' ? 1 : 0);
-
-  return 0.02 + riskScore * 0.30;
-}
-
-// Qué tan lejos está una empresa de cruzar cada umbral configurado, para
+// Qué tan lejos está un cliente de cruzar cada umbral configurado, para
 // usarse como proxy de confianza: casos "al límite" son menos confiables
 // que casos claramente dentro o fuera de rango.
-function estimateConfidence(company, rules) {
-  const marginUtilizacion = Math.abs(company.utilization - rules.utilizacionMaxima) / 100;
-  const marginMora = Math.abs(company.days_late - rules.diasMora) / 90;
-  const marginConcentracion = Math.abs(company.concentration - rules.concentracionGasto) / 100;
-  const marginAntiguedad = Math.abs(company.months_active - rules.antiguedadMinima) / 42;
-  const avgMargin = (marginUtilizacion + marginMora + marginConcentracion + marginAntiguedad) / 4;
+function estimateConfidence(customer, rules) {
+  const marginActividad = Math.abs(customer.activity_level - rules.actividadMinima) / 100;
+  const marginInactividad = Math.abs(customer.days_since_last_use - rules.diasInactividadMaxima) / 90;
+  const marginModulos = Math.abs(customer.current_modules.length - rules.modulosMinimos) / 5;
+  const marginAntiguedad = Math.abs(customer.months_active - rules.antiguedadMinima) / 42;
+  const avgMargin = (marginActividad + marginInactividad + marginModulos + marginAntiguedad) / 4;
 
   let confidence = 55 + avgMargin * 90;
 
-  if (!company.bureau_available) confidence -= 15;
-  if (company.identity_signal === 'alerta') confidence -= 10;
-  if (company.fraud_alert === 'alta') confidence -= 10;
-  else if (company.fraud_alert === 'media') confidence -= 5;
+  if (!customer.usage_data_available) confidence -= 15;
+  if (customer.support_alert === 'alta') confidence -= 10;
+  else if (customer.support_alert === 'media') confidence -= 5;
 
   return Math.max(45, Math.min(99, Math.round(confidence)));
 }
 
-function evaluateCompany(company, rules) {
-  let status = 'aprobado';
-  let limitMultiplier = 1;
+function evaluateCustomer(customer, rules) {
+  let status = 'prioritario';
+  let valueMultiplier = 1;
   const reasons = [];
 
   const escalate = (level) => {
-    if (level === 'rechazado') status = 'rechazado';
-    else if (level === 'revision' && status !== 'rechazado') status = 'revision';
+    if (level === 'no-listo') status = 'no-listo';
+    else if (level === 'considerar' && status !== 'no-listo') status = 'considerar';
   };
 
-  if (company.months_active < rules.antiguedadMinima) {
-    escalate('rechazado');
-    reasons.push(`su antigüedad de ${company.months_active} meses está por debajo del mínimo exigido de ${rules.antiguedadMinima} meses`);
+  if (customer.months_active < rules.antiguedadMinima) {
+    escalate('no-listo');
+    reasons.push(`su antigüedad de ${customer.months_active} meses como cliente está por debajo del mínimo exigido de ${rules.antiguedadMinima} meses`);
   }
 
-  if (company.fraud_alert !== 'ninguna') {
-    if (rules.accionFraude === 'bloquear') {
-      escalate('rechazado');
-      reasons.push(`presenta una alerta de fraude "${company.fraud_alert}" y la regla activa bloquea la cuenta automáticamente`);
-    } else if (rules.accionFraude === 'verificacion') {
-      escalate('revision');
-      reasons.push(`presenta una alerta de fraude "${company.fraud_alert}" que requiere verificación adicional antes de aprobar`);
-    } else if (rules.accionFraude === 'revision') {
-      escalate('revision');
-      reasons.push(`presenta una alerta de fraude "${company.fraud_alert}" marcada para revisión manual`);
-    } else if (rules.accionFraude === 'reducir') {
-      limitMultiplier = Math.min(limitMultiplier, REDUCED_LIMIT_MULTIPLIER);
-      reasons.push(`presenta una alerta de fraude "${company.fraud_alert}", por lo que se redujo la línea de crédito recomendada`);
+  if (customer.support_alert !== 'ninguna') {
+    if (rules.accionAlertaSoporte === 'excluir') {
+      escalate('no-listo');
+      reasons.push(`presenta una alerta de soporte "${customer.support_alert}" y la regla activa excluye la cuenta automáticamente`);
+    } else if (rules.accionAlertaSoporte === 'marcar-revisar') {
+      escalate('considerar');
+      reasons.push(`presenta una alerta de soporte "${customer.support_alert}" que requiere revisión del equipo de Customer Success antes de ofrecer un nuevo módulo`);
+    } else if (rules.accionAlertaSoporte === 'bajar-prioridad') {
+      escalate('considerar');
+      reasons.push(`presenta una alerta de soporte "${customer.support_alert}", por lo que se baja su prioridad a "a considerar"`);
+    } else if (rules.accionAlertaSoporte === 'reducir-valor') {
+      valueMultiplier = Math.min(valueMultiplier, REDUCED_VALUE_MULTIPLIER);
+      reasons.push(`presenta una alerta de soporte "${customer.support_alert}", por lo que se ajustó a la baja el valor incremental estimado`);
     }
   }
 
-  if (!company.bureau_available) {
-    if (rules.tratamientoInfoIncompleta === 'rechazar') {
-      escalate('rechazado');
-      reasons.push('no cuenta con información de buró disponible y la regla activa exige rechazar estos casos');
-    } else if (rules.tratamientoInfoIncompleta === 'solicitar-info') {
-      escalate('revision');
-      reasons.push('no cuenta con información de buró disponible, por lo que se solicitará información adicional');
-    } else if (rules.tratamientoInfoIncompleta === 'revision-manual') {
-      escalate('revision');
-      reasons.push('no cuenta con información de buró disponible y se marcó para revisión manual');
-    } else if (rules.tratamientoInfoIncompleta === 'limite-reducido') {
-      limitMultiplier = Math.min(limitMultiplier, REDUCED_LIMIT_MULTIPLIER);
-      reasons.push('no cuenta con información de buró disponible, por lo que se aprueba con un límite reducido');
+  if (!customer.usage_data_available) {
+    if (rules.tratamientoDatosIncompletos === 'excluir') {
+      escalate('no-listo');
+      reasons.push('no cuenta con datos de uso reciente disponibles y la regla activa exige excluir estos casos');
+    } else if (rules.tratamientoDatosIncompletos === 'solicitar-datos') {
+      escalate('considerar');
+      reasons.push('no cuenta con datos de uso reciente disponibles, por lo que se solicitará información adicional antes de ofrecer el módulo');
+    } else if (rules.tratamientoDatosIncompletos === 'revision-manual') {
+      escalate('considerar');
+      reasons.push('no cuenta con datos de uso reciente disponibles y se marcó para revisión manual');
+    } else if (rules.tratamientoDatosIncompletos === 'valor-reducido') {
+      valueMultiplier = Math.min(valueMultiplier, REDUCED_VALUE_MULTIPLIER);
+      reasons.push('no cuenta con datos de uso reciente disponibles, por lo que se estima con un valor incremental reducido');
     }
   }
 
-  if (company.utilization > rules.utilizacionMaxima) {
-    escalate('revision');
-    reasons.push(`su utilización actual (${company.utilization}%) supera el máximo permitido de ${rules.utilizacionMaxima}%`);
+  if (customer.activity_level < rules.actividadMinima) {
+    escalate('considerar');
+    reasons.push(`su actividad reciente (${customer.activity_level}%) está por debajo del mínimo requerido de ${rules.actividadMinima}%`);
   }
 
-  if (company.concentration > rules.concentracionGasto) {
-    escalate('revision');
-    reasons.push(`concentra ${company.concentration}% de su gasto en una sola fuente, por encima del límite de ${rules.concentracionGasto}%`);
+  if (customer.current_modules.length < rules.modulosMinimos) {
+    escalate('considerar');
+    reasons.push(`solo tiene ${customer.current_modules.length} módulo(s) contratado(s), por debajo del mínimo de ${rules.modulosMinimos} para considerar una nueva venta`);
   }
 
-  if (company.days_late > rules.diasMora) {
-    escalate('rechazado');
-    reasons.push(`registra ${company.days_late} días de mora, por encima del máximo permitido de ${rules.diasMora} días`);
+  if (customer.days_since_last_use > rules.diasInactividadMaxima) {
+    escalate('no-listo');
+    reasons.push(`registra ${customer.days_since_last_use} días desde su última actividad, por encima del máximo permitido de ${rules.diasInactividadMaxima} días`);
   }
 
-  const limit = status === 'rechazado'
-    ? 0
-    : Math.round(company.monthly_revenue * BASE_LIMIT_MULTIPLIER * limitMultiplier);
+  if (!customer.next_module) {
+    escalate('no-listo');
+    reasons.push('ya tiene contratados todos los módulos disponibles, por lo que no hay un siguiente módulo que ofrecer');
+  }
 
-  const pd = estimatePd(company);
-  const exposure = status === 'aprobado' ? limit * (company.utilization / 100) : 0;
-  const expectedLoss = exposure * pd * LGD;
-  const confidence = estimateConfidence(company, rules);
+  const incrementalValue = status !== 'no-listo' && customer.next_module
+    ? Math.round(MODULE_MONTHLY_VALUE[customer.next_module] * SIZE_MULTIPLIER[customer.company_size] * valueMultiplier)
+    : 0;
 
-  return { company, status, limit, limitMultiplier, pd, expectedLoss, confidence, reasons };
+  const confidence = estimateConfidence(customer, rules);
+
+  return { customer, status, incrementalValue, valueMultiplier, confidence, reasons };
 }
 
-// Construye 1 a 3 frases en lenguaje natural explicando la decisión,
-// a partir de las reglas que realmente se activaron para esta empresa.
+// Construye 1 a 3 frases en lenguaje natural explicando la clasificación,
+// a partir de las reglas que realmente se activaron para este cliente.
 function generateExplanation(evaluation) {
-  const { company, status, reasons } = evaluation;
+  const { customer, status, reasons } = evaluation;
+  const moduleLabel = customer.next_module ? MODULE_LABELS[customer.next_module] : null;
 
-  const verdictPhrase = status === 'aprobado'
-    ? `${company.name} fue aprobada`
-    : status === 'revision'
-      ? `${company.name} fue marcada para revisión manual`
-      : `${company.name} fue rechazada`;
+  const verdictPhrase = status === 'prioritario'
+    ? `${customer.name} es prioritario para ofrecerle ${moduleLabel}`
+    : status === 'considerar'
+      ? `${customer.name} quedó "a considerar" para ofrecerle ${moduleLabel || 'un siguiente módulo'}`
+      : `${customer.name} no está listo para una oferta de nuevo módulo`;
 
   if (reasons.length === 0) {
-    return `${verdictPhrase} porque todas sus señales de riesgo están dentro de los límites definidos por las reglas activas: utilización, mora, concentración y antigüedad en rango saludable, sin alertas de fraude o identidad, y con información de buró disponible.`;
+    return `${verdictPhrase} porque todas sus señales están dentro de los rangos definidos por las reglas activas: actividad reciente, módulos actuales, antigüedad y días de inactividad en rango saludable, sin alertas de soporte y con datos de uso disponibles.`;
   }
 
   let reasonSentence;
@@ -150,39 +152,38 @@ function generateExplanation(evaluation) {
   }
 
   let extra = '';
-  if (status === 'aprobado' && evaluation.limitMultiplier < 1) {
-    extra = ' La línea recomendada se ajustó a la baja como medida de mitigación.';
-  } else if (status === 'revision') {
-    extra = ' Un analista debe confirmar la decisión antes de habilitar cualquier línea de crédito.';
-  } else if (status === 'rechazado') {
-    extra = ' No se recomienda asignar línea de crédito bajo las reglas activas.';
+  if (status === 'prioritario' && evaluation.valueMultiplier < 1) {
+    extra = ' El valor incremental estimado se ajustó a la baja como medida de precaución.';
+  } else if (status === 'considerar') {
+    extra = ' El equipo de Customer Success debe confirmar la oportunidad antes de contactar al cliente.';
+  } else if (status === 'no-listo') {
+    extra = ' No se recomienda ofrecer un nuevo módulo bajo las reglas activas.';
   }
 
   return reasonSentence + extra;
 }
 
-function evaluatePortfolio(companyList, rules) {
-  return companyList.map((company) => evaluateCompany(company, rules));
+function evaluatePortfolio(customerList, rules) {
+  return customerList.map((customer) => evaluateCustomer(customer, rules));
 }
 
 function computePortfolioMetrics(evaluations) {
   const total = evaluations.length;
-  const approved = evaluations.filter((e) => e.status === 'aprobado');
-  const inReview = evaluations.filter((e) => e.status === 'revision');
-  const rejected = evaluations.filter((e) => e.status === 'rechazado');
+  const priority = evaluations.filter((e) => e.status === 'prioritario');
+  const consider = evaluations.filter((e) => e.status === 'considerar');
+  const notReady = evaluations.filter((e) => e.status === 'no-listo');
 
-  const totalLimit = approved.reduce((sum, e) => sum + e.limit, 0);
-  const totalExpectedLoss = evaluations.reduce((sum, e) => sum + e.expectedLoss, 0);
-  const avgUtilization = approved.length
-    ? approved.reduce((sum, e) => sum + e.company.utilization, 0) / approved.length
+  const totalIncrementalValue = priority.reduce((sum, e) => sum + e.incrementalValue, 0);
+  const avgActivity = priority.length
+    ? priority.reduce((sum, e) => sum + e.customer.activity_level, 0) / priority.length
     : 0;
 
   return {
-    approvalRate: total ? (approved.length / total) * 100 : 0,
-    reviewRate: total ? (inReview.length / total) * 100 : 0,
-    rejectRate: total ? (rejected.length / total) * 100 : 0,
-    totalLimit,
-    expectedLoss: totalExpectedLoss,
-    avgUtilization,
+    priorityRate: total ? (priority.length / total) * 100 : 0,
+    priorityCount: priority.length,
+    considerRate: total ? (consider.length / total) * 100 : 0,
+    notReadyRate: total ? (notReady.length / total) * 100 : 0,
+    totalIncrementalValue,
+    avgActivity,
   };
 }

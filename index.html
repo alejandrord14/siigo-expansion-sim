@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Risk Builder</title>
-  <meta name="description" content="Simulador de reglas de crédito: prototipo personal de Alejandro Ordóñez para explorar cómo distintas reglas afectarían una cartera de empresas. No conectado a sistemas reales de Clara.">
+  <title>Expansion Builder</title>
+  <meta name="description" content="Simulador de priorización de expansión de módulos: prototipo personal de Alejandro Ordóñez para explorar qué clientes de un ERP/contable tipo Siigo están listos para un nuevo módulo. No conectado a datos reales de ninguna empresa.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://alejandrord14.github.io/risk-builder/">
-  <meta property="og:title" content="Risk Builder">
-  <meta property="og:description" content="Simulador de reglas de crédito. Prototipo personal, no conectado a sistemas reales de Clara.">
-  <meta property="og:image" content="https://alejandrord14.github.io/risk-builder/og-image.png">
+  <meta property="og:url" content="https://alejandrord14.github.io/siigo-expansion-sim/">
+  <meta property="og:title" content="Expansion Builder">
+  <meta property="og:description" content="Simulador de priorización de expansión de módulos. Prototipo personal, no conectado a datos reales de ninguna empresa.">
+  <meta property="og:image" content="https://alejandrord14.github.io/siigo-expansion-sim/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Risk Builder">
-  <meta name="twitter:description" content="Simulador de reglas de crédito. Prototipo personal, no conectado a sistemas reales de Clara.">
-  <meta name="twitter:image" content="https://alejandrord14.github.io/risk-builder/og-image.png">
+  <meta name="twitter:title" content="Expansion Builder">
+  <meta name="twitter:description" content="Simulador de priorización de expansión de módulos. Prototipo personal, no conectado a datos reales de ninguna empresa.">
+  <meta name="twitter:image" content="https://alejandrord14.github.io/siigo-expansion-sim/og-image.png">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="alternate icon" href="favicon.png">
   <link rel="stylesheet" href="style.css">
@@ -28,8 +28,8 @@
 
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-logo">
-        <span class="logo-mark">RB</span>
-        <span class="logo-text">Risk Builder</span>
+        <span class="logo-mark">EB</span>
+        <span class="logo-text">Expansion Builder</span>
         <button class="sidebar-close-btn" id="sidebar-close" type="button" aria-label="Cerrar menú">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </button>
@@ -38,7 +38,7 @@
         <a href="#intro">Inicio</a>
         <a href="#controls">Panel de reglas</a>
         <a href="#metrics">Resultados</a>
-        <a href="#companies">Cartera sintética</a>
+        <a href="#companies">Clientes sintéticos</a>
       </nav>
     </aside>
 
@@ -49,8 +49,8 @@
             <span></span><span></span><span></span>
           </button>
           <div class="mobile-brand">
-            <span class="logo-mark">RB</span>
-            <span class="logo-text">Risk Builder</span>
+            <span class="logo-mark">EB</span>
+            <span class="logo-text">Expansion Builder</span>
           </div>
         </div>
         <div class="topbar-right">
@@ -67,8 +67,8 @@
                   <p class="profile-popover-subtitle">de Alejandro Ordóñez</p>
                 </div>
               </div>
-              <p class="profile-popover-text">Explora cómo distintas reglas de crédito afectarían una cartera de empresas. Construido para conversar sobre el problema, no para producción.</p>
-              <p class="profile-popover-note">No conectado a ningún sistema real de Clara. Sin autenticación, sin datos reales, sin acceso interno de ningún tipo.</p>
+              <p class="profile-popover-text">Explora qué clientes de un ERP/contable tipo Siigo estarían listos para que se les ofrezca un nuevo módulo. Construido para conversar sobre el problema, no para producción.</p>
+              <p class="profile-popover-note">No conectado a datos reales de ninguna empresa. Sin autenticación, sin datos reales, sin acceso interno de ningún tipo.</p>
             </div>
           </div>
         </div>
@@ -79,8 +79,8 @@
           <div class="container">
             <div class="card task-header">
               <div class="task-header-text">
-                <h1>Simulador de reglas de crédito</h1>
-                <p>Ajusta los controles de abajo y observa el impacto en la aprobación, el cupo, la pérdida esperada y cada empresa de la cartera, en tiempo real.</p>
+                <h1>Simulador de priorización de expansión</h1>
+                <p>Ajusta los controles de abajo y observa el impacto en cuántos clientes son prioritarios, el ingreso incremental potencial y la clasificación de cada cliente de la cartera, en tiempo real.</p>
               </div>
               <button class="btn btn-secondary" id="reset-rules-btn" type="button">Restablecer valores por defecto</button>
             </div>
@@ -95,63 +95,15 @@
             </div>
 
             <div class="live-metrics-bar" id="live-metrics-bar">
-              <span><strong id="live-metric-approval">-</strong> aprobación</span>
+              <span><strong id="live-metric-priority">-</strong> prioritarios</span>
               <span class="live-metrics-divider">·</span>
-              <span><strong id="live-metric-limit">-</strong> cupo</span>
+              <span><strong id="live-metric-count">-</strong> clientes</span>
               <span class="live-metrics-divider">·</span>
-              <span><strong id="live-metric-loss">-</strong> pérdida esp.</span>
+              <span><strong id="live-metric-value">-</strong> ingreso incremental</span>
             </div>
 
             <div class="card controls-card">
               <div class="controls-grid">
-
-                <div class="control">
-                  <div class="control-label">
-                    <label for="utilizacion-maxima">Utilización máxima</label>
-                    <span class="control-value" id="utilizacion-maxima-value">80%</span>
-                  </div>
-                  <input
-                    type="range"
-                    id="utilizacion-maxima"
-                    min="0"
-                    max="100"
-                    step="1"
-                    value="80"
-                    data-suffix="%"
-                  >
-                </div>
-
-                <div class="control">
-                  <div class="control-label">
-                    <label for="dias-mora">Días de mora</label>
-                    <span class="control-value" id="dias-mora-value">30 días</span>
-                  </div>
-                  <input
-                    type="range"
-                    id="dias-mora"
-                    min="0"
-                    max="90"
-                    step="1"
-                    value="30"
-                    data-suffix=" días"
-                  >
-                </div>
-
-                <div class="control">
-                  <div class="control-label">
-                    <label for="concentracion-gasto">Concentración de gasto</label>
-                    <span class="control-value" id="concentracion-gasto-value">40%</span>
-                  </div>
-                  <input
-                    type="range"
-                    id="concentracion-gasto"
-                    min="0"
-                    max="100"
-                    step="1"
-                    value="40"
-                    data-suffix="%"
-                  >
-                </div>
 
                 <div class="control">
                   <div class="control-label">
@@ -171,25 +123,73 @@
 
                 <div class="control">
                   <div class="control-label">
-                    <label for="accion-fraude">Acción ante fraude</label>
+                    <label for="actividad-minima">Actividad mínima reciente</label>
+                    <span class="control-value" id="actividad-minima-value">50%</span>
                   </div>
-                  <select id="accion-fraude">
-                    <option value="bloquear">Bloquear cuenta</option>
-                    <option value="reducir">Reducir línea de crédito</option>
-                    <option value="verificacion">Solicitar verificación adicional</option>
-                    <option value="revision" selected>Marcar para revisión manual</option>
+                  <input
+                    type="range"
+                    id="actividad-minima"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value="50"
+                    data-suffix="%"
+                  >
+                </div>
+
+                <div class="control">
+                  <div class="control-label">
+                    <label for="modulos-minimos">Módulos actuales mínimos</label>
+                    <span class="control-value" id="modulos-minimos-value">1 módulo(s)</span>
+                  </div>
+                  <input
+                    type="range"
+                    id="modulos-minimos"
+                    min="0"
+                    max="5"
+                    step="1"
+                    value="1"
+                    data-suffix=" módulo(s)"
+                  >
+                </div>
+
+                <div class="control">
+                  <div class="control-label">
+                    <label for="dias-inactividad-maxima">Días de inactividad máxima</label>
+                    <span class="control-value" id="dias-inactividad-maxima-value">30 días</span>
+                  </div>
+                  <input
+                    type="range"
+                    id="dias-inactividad-maxima"
+                    min="0"
+                    max="90"
+                    step="1"
+                    value="30"
+                    data-suffix=" días"
+                  >
+                </div>
+
+                <div class="control">
+                  <div class="control-label">
+                    <label for="accion-alerta-soporte">Acción ante alerta de soporte</label>
+                  </div>
+                  <select id="accion-alerta-soporte">
+                    <option value="excluir">Excluir cliente</option>
+                    <option value="reducir-valor">Reducir valor incremental estimado</option>
+                    <option value="marcar-revisar">Marcar para revisión de Customer Success</option>
+                    <option value="bajar-prioridad" selected>Bajar prioridad a "a considerar"</option>
                   </select>
                 </div>
 
                 <div class="control">
                   <div class="control-label">
-                    <label for="info-incompleta">Tratamiento de info incompleta</label>
+                    <label for="tratamiento-datos-incompletos">Tratamiento de datos incompletos</label>
                   </div>
-                  <select id="info-incompleta">
-                    <option value="rechazar">Rechazar solicitud</option>
-                    <option value="limite-reducido" selected>Aprobar con límite reducido</option>
-                    <option value="solicitar-info">Solicitar información adicional</option>
-                    <option value="revision-manual">Aprobar con revisión manual</option>
+                  <select id="tratamiento-datos-incompletos">
+                    <option value="excluir">Excluir cliente</option>
+                    <option value="valor-reducido" selected>Considerar con valor reducido</option>
+                    <option value="solicitar-datos">Solicitar datos adicionales</option>
+                    <option value="revision-manual">Marcar para revisión manual</option>
                   </select>
                 </div>
 
@@ -207,28 +207,28 @@
 
             <div class="metrics-grid">
               <div class="card metric-card">
-                <span class="metric-label">Tasa de aprobación</span>
-                <span class="metric-value" id="metric-approval-rate">-</span>
+                <span class="metric-label">% Prioritarios</span>
+                <span class="metric-value" id="metric-priority-rate">-</span>
               </div>
               <div class="card metric-card">
-                <span class="metric-label">Cupo total</span>
-                <span class="metric-value" id="metric-total-limit">-</span>
+                <span class="metric-label">Clientes prioritarios</span>
+                <span class="metric-value" id="metric-priority-count">-</span>
               </div>
               <div class="card metric-card">
-                <span class="metric-label">Pérdida esperada</span>
-                <span class="metric-value" id="metric-expected-loss">-</span>
+                <span class="metric-label">Ingreso incremental potencial</span>
+                <span class="metric-value" id="metric-incremental-value">-</span>
               </div>
               <div class="card metric-card">
-                <span class="metric-label">% en revisión</span>
-                <span class="metric-value" id="metric-review-rate">-</span>
+                <span class="metric-label">% a considerar</span>
+                <span class="metric-value" id="metric-consider-rate">-</span>
               </div>
               <div class="card metric-card">
-                <span class="metric-label">% rechazado</span>
-                <span class="metric-value" id="metric-reject-rate">-</span>
+                <span class="metric-label">% no listos</span>
+                <span class="metric-value" id="metric-notready-rate">-</span>
               </div>
               <div class="card metric-card">
-                <span class="metric-label">Utilización promedio</span>
-                <span class="metric-value" id="metric-avg-utilization">-</span>
+                <span class="metric-label">Actividad promedio (prioritarios)</span>
+                <span class="metric-value" id="metric-avg-activity">-</span>
               </div>
             </div>
           </div>
@@ -237,8 +237,8 @@
         <section id="companies" class="companies">
           <div class="container">
             <div class="section-heading">
-              <h2>Cartera sintética</h2>
-              <p>30 empresas de prueba generadas de forma determinística para simular reglas.</p>
+              <h2>Clientes sintéticos</h2>
+              <p>30 clientes de prueba generados de forma determinística para simular reglas.</p>
             </div>
 
             <div class="companies-layout">
@@ -247,9 +247,9 @@
                   <label for="status-filter" class="table-toolbar-label">Filtrar por estado</label>
                   <select id="status-filter">
                     <option value="todos">Todos los estados</option>
-                    <option value="aprobado">Aprobado</option>
-                    <option value="revision">En revisión</option>
-                    <option value="rechazado">Rechazado</option>
+                    <option value="prioritario">Prioritario</option>
+                    <option value="considerar">A considerar</option>
+                    <option value="no-listo">No listo</option>
                   </select>
                 </div>
                 <div class="table-scroll">
@@ -262,9 +262,9 @@
                     </colgroup>
                     <thead>
                       <tr>
-                        <th><button type="button" class="th-sort" data-sort="name">Empresa<span class="sort-indicator"></span></button></th>
+                        <th><button type="button" class="th-sort" data-sort="name">Cliente<span class="sort-indicator"></span></button></th>
                         <th><button type="button" class="th-sort" data-sort="months_active">Antigüedad<span class="sort-indicator"></span></button></th>
-                        <th><button type="button" class="th-sort" data-sort="utilization">Utilización<span class="sort-indicator"></span></button></th>
+                        <th><button type="button" class="th-sort" data-sort="activity_level">Actividad<span class="sort-indicator"></span></button></th>
                         <th><button type="button" class="th-sort" data-sort="status">Estado<span class="sort-indicator"></span></button></th>
                       </tr>
                     </thead>
@@ -281,14 +281,14 @@
 
       <footer class="page-footer">
         <div class="container">
-          <p>Construido por Alejandro Ordóñez tras nuestra conversación: prototipo exploratorio, no vinculado a datos reales de Clara.</p>
+          <p>Construido por Alejandro Ordóñez: prototipo personal exploratorio, no vinculado a datos reales de ninguna empresa.</p>
         </div>
       </footer>
     </div>
 
   </div>
 
-  <script src="companies.js"></script>
+  <script src="customers.js"></script>
   <script src="rules-engine.js"></script>
   <script src="app.js"></script>
 </body>

@@ -10,51 +10,49 @@ document.querySelectorAll('input[type="range"]').forEach((slider) => {
   updateValue();
 });
 
-let selectedCompanyId = null;
+let selectedCustomerId = null;
 
 function formatCurrency(value) {
   return `$${value.toLocaleString('en-US')}`;
 }
 
-function fraudBadgeClass(level) {
+function supportAlertBadgeClass(level) {
   if (level === 'alta') return 'badge-danger';
   if (level === 'media') return 'badge-warning';
   return 'badge-ok';
 }
 
-function identityBadgeClass(signal) {
-  return signal === 'alerta' ? 'badge-warning' : 'badge-ok';
-}
-
 function statusBadgeClass(status) {
-  if (status === 'aprobado') return 'badge-ok';
-  if (status === 'revision') return 'badge-warning';
+  if (status === 'prioritario') return 'badge-ok';
+  if (status === 'considerar') return 'badge-warning';
   return 'badge-danger';
 }
 
 const STATUS_LABELS = {
-  aprobado: 'Aprobado',
-  revision: 'En revisión',
-  rechazado: 'Rechazado',
+  prioritario: 'Prioritario',
+  considerar: 'A considerar',
+  'no-listo': 'No listo',
 };
 
-function buildCompanyDetailHTML(company, evaluation, rules) {
+function buildCustomerDetailHTML(customer, evaluation, rules) {
   const explanation = generateExplanation(evaluation);
 
-  const utilizationChipClass = company.utilization > rules.utilizacionMaxima ? 'badge-warning' : 'badge-ok';
-  const paymentChipClass = company.payment_history >= 80 ? 'badge-ok' : company.payment_history >= 60 ? 'badge-warning' : 'badge-danger';
-  const bureauChipClass = company.bureau_available ? 'badge-ok' : 'badge-warning';
+  const moduleChipClass = customer.next_module ? 'badge-ok' : 'badge-warning';
+  const moduleChipLabel = customer.next_module ? MODULE_LABELS[customer.next_module] : 'Ninguno (todos contratados)';
+  const activityChipClass = customer.activity_level >= rules.actividadMinima ? 'badge-ok' : 'badge-warning';
+  const moduleCountChipClass = customer.current_modules.length >= rules.modulosMinimos ? 'badge-ok' : 'badge-warning';
+  const usageDataChipClass = customer.usage_data_available ? 'badge-ok' : 'badge-warning';
 
   return `
     <div class="detail-header">
-      <h3>${company.name}</h3>
+      <h3>${customer.name}</h3>
       <span class="badge-pill ${statusBadgeClass(evaluation.status)}">${STATUS_LABELS[evaluation.status]}</span>
     </div>
 
     <div class="detail-highlights">
       <div class="detail-highlight">
-        <span class="detail-label">Línea de crédito recomendada</span>
-        <span class="detail-highlight-value">${formatCurrency(evaluation.limit)}</span>
+        <span class="detail-label">Valor incremental estimado (mensual)</span>
+        <span class="detail-highlight-value">${formatCurrency(evaluation.incrementalValue)}</span>
       </div>
       <div class="detail-highlight">
         <span class="detail-label">Nivel de confianza</span>
@@ -63,12 +61,12 @@ function buildCompanyDetailHTML(company, evaluation, rules) {
     </div>
 
     <div class="detail-chips">
-      <span class="badge-pill ${utilizationChipClass}">Utilización: ${company.utilization}%</span>
-      <span class="badge-pill ${paymentChipClass}">Historial de pago: ${company.payment_history}</span>
-      <span class="badge-pill ${identityBadgeClass(company.identity_signal)}">Identidad: ${company.identity_signal}</span>
-      <span class="badge-pill ${fraudBadgeClass(company.fraud_alert)}">Fraude: ${company.fraud_alert}</span>
-      <span class="badge-pill ${bureauChipClass}">Buró: ${company.bureau_available ? 'disponible' : 'no disponible'}</span>
-      <span class="detail-stat" title="Contribuye a la pérdida esperada; no forma parte de las 6 reglas activas ni cambia el estado de la solicitud">Variabilidad de flujo: ${company.flow_variability}%</span>
+      <span class="badge-pill ${moduleChipClass}">Módulo sugerido: ${moduleChipLabel}</span>
+      <span class="badge-pill ${activityChipClass}">Actividad reciente: ${customer.activity_level}%</span>
+      <span class="badge-pill ${moduleCountChipClass}">Módulos actuales: ${customer.current_modules.length}/5</span>
+      <span class="badge-pill ${supportAlertBadgeClass(customer.support_alert)}">Alerta de soporte: ${customer.support_alert}</span>
+      <span class="badge-pill ${usageDataChipClass}">Datos de uso: ${customer.usage_data_available ? 'disponible' : 'no disponible'}</span>
+      <span class="detail-stat" title="Información de contexto; no forma parte de las 6 reglas activas ni cambia la clasificación">País: ${customer.country} · Tamaño: ${SIZE_LABELS[customer.company_size]} · Variabilidad de uso: ${customer.usage_variability}%</span>
     </div>
 
     <div class="detail-explanation">
@@ -78,38 +76,38 @@ function buildCompanyDetailHTML(company, evaluation, rules) {
   `;
 }
 
-function renderCompanyDetail(id) {
+function renderCustomerDetail(id) {
   const detail = document.getElementById('company-detail');
-  if (!detail || typeof companies === 'undefined' || typeof getCurrentRules === 'undefined') return;
+  if (!detail || typeof customers === 'undefined' || typeof getCurrentRules === 'undefined') return;
 
-  const company = companies.find((c) => c.id === id);
+  const customer = customers.find((c) => c.id === id);
 
-  if (!company) {
+  if (!customer) {
     detail.innerHTML = `
       <div class="detail-empty">
-        <p>Selecciona una empresa de la lista para ver su detalle.</p>
+        <p>Selecciona un cliente de la lista para ver su detalle.</p>
       </div>
     `;
     return;
   }
 
   const rules = getCurrentRules();
-  const evaluation = evaluateCompany(company, rules);
-  detail.innerHTML = buildCompanyDetailHTML(company, evaluation, rules);
+  const evaluation = evaluateCustomer(customer, rules);
+  detail.innerHTML = buildCustomerDetailHTML(customer, evaluation, rules);
 }
 
-const STATUS_ORDER = ['aprobado', 'revision', 'rechazado'];
+const STATUS_ORDER = ['prioritario', 'considerar', 'no-listo'];
 
 let statusFilter = 'todos';
 let sortColumn = null;
 let sortDirection = 'asc';
 
-function renderCompaniesTable() {
+function renderCustomersTable() {
   const tbody = document.getElementById('companies-tbody');
-  if (!tbody || typeof companies === 'undefined' || typeof getCurrentRules === 'undefined') return;
+  if (!tbody || typeof customers === 'undefined' || typeof getCurrentRules === 'undefined') return;
 
   const rules = getCurrentRules();
-  let evaluations = evaluatePortfolio(companies, rules);
+  let evaluations = evaluatePortfolio(customers, rules);
 
   if (statusFilter !== 'todos') {
     evaluations = evaluations.filter(({ status }) => status === statusFilter);
@@ -119,18 +117,18 @@ function renderCompaniesTable() {
     const direction = sortDirection === 'asc' ? 1 : -1;
     evaluations = [...evaluations].sort((a, b) => {
       if (sortColumn === 'name') {
-        return a.company.name.localeCompare(b.company.name) * direction;
+        return a.customer.name.localeCompare(b.customer.name) * direction;
       }
-      const valueA = sortColumn === 'status' ? STATUS_ORDER.indexOf(a.status) : a.company[sortColumn];
-      const valueB = sortColumn === 'status' ? STATUS_ORDER.indexOf(b.status) : b.company[sortColumn];
+      const valueA = sortColumn === 'status' ? STATUS_ORDER.indexOf(a.status) : a.customer[sortColumn];
+      const valueB = sortColumn === 'status' ? STATUS_ORDER.indexOf(b.status) : b.customer[sortColumn];
       return (valueA - valueB) * direction;
     });
   }
 
   tbody.innerHTML = evaluations.map((evaluation) => {
-    const c = evaluation.company;
+    const c = evaluation.customer;
     const status = evaluation.status;
-    const isSelected = c.id === selectedCompanyId;
+    const isSelected = c.id === selectedCustomerId;
 
     return `
       <tr
@@ -141,13 +139,13 @@ function renderCompaniesTable() {
         aria-expanded="${isSelected}"
         aria-controls="company-detail-row-${c.id}"
       >
-        <td class="company-name" data-label="Empresa"><span class="company-name-text">${c.name}<span class="expand-chevron" aria-hidden="true"></span></span></td>
+        <td class="company-name" data-label="Cliente"><span class="company-name-text">${c.name}<span class="expand-chevron" aria-hidden="true"></span></span></td>
         <td data-label="Antigüedad">${c.months_active} m</td>
-        <td data-label="Utilización">${c.utilization}%</td>
+        <td data-label="Actividad">${c.activity_level}%</td>
         <td data-label="Estado"><span class="badge-pill ${statusBadgeClass(status)}">${STATUS_LABELS[status]}</span></td>
       </tr>
       <tr class="company-detail-row" id="company-detail-row-${c.id}"${isSelected ? '' : ' hidden'}>
-        <td colspan="4">${isSelected ? buildCompanyDetailHTML(c, evaluation, rules) : ''}</td>
+        <td colspan="4">${isSelected ? buildCustomerDetailHTML(c, evaluation, rules) : ''}</td>
       </tr>
     `;
   }).join('');
@@ -168,35 +166,35 @@ function updateSortIndicators() {
   });
 }
 
-function selectCompanyRow(row) {
+function selectCustomerRow(row) {
   const id = Number(row.dataset.id);
   const isMobile = window.matchMedia('(max-width: 900px)').matches;
 
-  if (isMobile && selectedCompanyId === id) {
-    selectedCompanyId = null;
+  if (isMobile && selectedCustomerId === id) {
+    selectedCustomerId = null;
   } else {
-    selectedCompanyId = id;
+    selectedCustomerId = id;
   }
 
-  renderCompaniesTable();
-  renderCompanyDetail(selectedCompanyId);
+  renderCustomersTable();
+  renderCustomerDetail(selectedCustomerId);
 
   document.querySelector(`.company-row[data-id="${id}"]`)?.focus();
 }
 
-const companiesTbody = document.getElementById('companies-tbody');
-if (companiesTbody) {
-  companiesTbody.addEventListener('click', (event) => {
+const customersTbody = document.getElementById('companies-tbody');
+if (customersTbody) {
+  customersTbody.addEventListener('click', (event) => {
     const row = event.target.closest('.company-row');
-    if (row) selectCompanyRow(row);
+    if (row) selectCustomerRow(row);
   });
 
-  companiesTbody.addEventListener('keydown', (event) => {
+  customersTbody.addEventListener('keydown', (event) => {
     if (event.key !== 'Enter' && event.key !== ' ') return;
     const row = event.target.closest('.company-row');
     if (!row) return;
     event.preventDefault();
-    selectCompanyRow(row);
+    selectCustomerRow(row);
   });
 }
 
@@ -204,7 +202,7 @@ const statusFilterSelect = document.getElementById('status-filter');
 if (statusFilterSelect) {
   statusFilterSelect.addEventListener('change', (event) => {
     statusFilter = event.target.value;
-    renderCompaniesTable();
+    renderCustomersTable();
   });
 }
 
@@ -217,40 +215,40 @@ document.querySelectorAll('.th-sort').forEach((button) => {
       sortColumn = column;
       sortDirection = 'asc';
     }
-    renderCompaniesTable();
+    renderCustomersTable();
   });
 });
 
-renderCompaniesTable();
-renderCompanyDetail(selectedCompanyId);
+renderCustomersTable();
+renderCustomerDetail(selectedCustomerId);
 
 function formatPercent(value) {
   return `${value.toFixed(1)}%`;
 }
 
 function renderMetrics() {
-  if (typeof companies === 'undefined' || typeof getCurrentRules === 'undefined') return;
+  if (typeof customers === 'undefined' || typeof getCurrentRules === 'undefined') return;
 
   const rules = getCurrentRules();
-  const evaluations = evaluatePortfolio(companies, rules);
+  const evaluations = evaluatePortfolio(customers, rules);
   const metrics = computePortfolioMetrics(evaluations);
 
-  document.getElementById('metric-approval-rate').textContent = formatPercent(metrics.approvalRate);
-  document.getElementById('metric-total-limit').textContent = formatCurrency(Math.round(metrics.totalLimit));
-  document.getElementById('metric-expected-loss').textContent = formatCurrency(Math.round(metrics.expectedLoss));
-  document.getElementById('metric-review-rate').textContent = formatPercent(metrics.reviewRate);
-  document.getElementById('metric-reject-rate').textContent = formatPercent(metrics.rejectRate);
-  document.getElementById('metric-avg-utilization').textContent = formatPercent(metrics.avgUtilization);
+  document.getElementById('metric-priority-rate').textContent = formatPercent(metrics.priorityRate);
+  document.getElementById('metric-incremental-value').textContent = `${formatCurrency(Math.round(metrics.totalIncrementalValue))}/mes`;
+  document.getElementById('metric-priority-count').textContent = String(metrics.priorityCount);
+  document.getElementById('metric-consider-rate').textContent = formatPercent(metrics.considerRate);
+  document.getElementById('metric-notready-rate').textContent = formatPercent(metrics.notReadyRate);
+  document.getElementById('metric-avg-activity').textContent = formatPercent(metrics.avgActivity);
 
-  document.getElementById('live-metric-approval').textContent = formatPercent(metrics.approvalRate);
-  document.getElementById('live-metric-limit').textContent = formatCurrency(Math.round(metrics.totalLimit));
-  document.getElementById('live-metric-loss').textContent = formatCurrency(Math.round(metrics.expectedLoss));
+  document.getElementById('live-metric-priority').textContent = formatPercent(metrics.priorityRate);
+  document.getElementById('live-metric-count').textContent = String(metrics.priorityCount);
+  document.getElementById('live-metric-value').textContent = `${formatCurrency(Math.round(metrics.totalIncrementalValue))}/mes`;
 }
 
 function refreshFromRules() {
   renderMetrics();
-  renderCompaniesTable();
-  renderCompanyDetail(selectedCompanyId);
+  renderCustomersTable();
+  renderCustomerDetail(selectedCustomerId);
 }
 
 const ruleControls = document.querySelectorAll('#controls input, #controls select');
