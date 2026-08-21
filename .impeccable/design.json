@@ -1,0 +1,142 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-20T00:00:00Z",
+  "title": "Design System: Expansion Builder",
+  "extensions": {
+    "colorMeta": {
+      "blue": { "role": "primary", "displayName": "Brand Blue (accent only)", "canonical": "#009DFF", "tonalRamp": ["#00304D", "#004D7A", "#0067A9", "#0077C2", "#009DFF", "#4DBBFF", "#99D9FF", "#E6F6FF"] },
+      "blue-strong": { "role": "primary", "displayName": "Blue Strong (solid-fill working shade)", "canonical": "#0077C2", "tonalRamp": ["#00243A", "#003A5C", "#005486", "#0077C2", "#3B96D6", "#7CB9E5", "#BADCF2", "#E9F4FB"] },
+      "blue-on-tint": { "role": "primary", "displayName": "Blue on Tint (text-on-chip)", "canonical": "#0067A9" },
+      "green": { "role": "secondary", "displayName": "Status/Reference Green", "canonical": "#1AA260" },
+      "green-strong": { "role": "secondary", "displayName": "Green Strong (primary action fill)", "canonical": "#15834E", "tonalRamp": ["#0B2E1D", "#124A2F", "#156B41", "#15834E", "#1AA260", "#4EC086", "#94DAB6", "#E4F5EC"] },
+      "green-on-tint": { "role": "secondary", "displayName": "Green on Tint (ok badge text)", "canonical": "#137646" },
+      "amber": { "role": "tertiary", "displayName": "Status Amber (warning badge)", "canonical": "#B7791F" },
+      "amber-on-tint": { "role": "tertiary", "displayName": "Amber on Tint", "canonical": "#8C5D18" },
+      "red": { "role": "tertiary", "displayName": "Status Red (danger badge)", "canonical": "#D14343" },
+      "red-on-tint": { "role": "tertiary", "displayName": "Red on Tint", "canonical": "#BD2E2E" },
+      "surface": { "role": "neutral", "displayName": "White Surface", "canonical": "#FFFFFF" },
+      "panel": { "role": "neutral", "displayName": "Card Panel Gray", "canonical": "#F5F6F8" },
+      "text": { "role": "neutral", "displayName": "Near-Black Text", "canonical": "#1F2430" },
+      "text-muted": { "role": "neutral", "displayName": "Muted Text", "canonical": "#5F6B78" },
+      "border": { "role": "neutral", "displayName": "Structural Border", "canonical": "#E4E7EC" },
+      "border-soft": { "role": "neutral", "displayName": "Soft Border", "canonical": "#EEF0F3" }
+    },
+    "typographyMeta": {
+      "title": { "displayName": "Title", "purpose": "Section headings and the intro h1; the largest page-chrome text step." },
+      "body": { "displayName": "Body", "purpose": "Control labels, table cells, detail explanation text." },
+      "label": { "displayName": "Label", "purpose": "Table column headers and mobile stacked-card row labels, uppercase." }
+    },
+    "shadows": [
+      { "name": "shadow-card", "value": "0 1px 2px rgba(16,24,40,0.04), 0 4px 12px rgba(16,24,40,0.06)", "purpose": "Ambient lift for every card, select, slider track, and the live-metrics bar." },
+      { "name": "shadow-pop", "value": "0 12px 32px rgba(16,24,40,0.14)", "purpose": "Reserved for floating popover panels (help, profile)." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "0.15s ease", "purpose": "Default hover/focus color and background transitions." },
+      { "name": "drawer-slide", "value": "0.25s ease transform", "purpose": "Mobile sidebar drawer open/close." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "900px" },
+      { "name": "lg", "value": "1100px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The app's one primary action (reset rules to default), in the topbar.",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M20 12a8 8 0 1 1-2.6-5.9\"/><path d=\"M20 4v4.5h-4.5\"/></svg><span>Restablecer valores por defecto</span></button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 6px; border: none; background: #15834E; color: #FFFFFF; border-radius: 12px; padding: 9px 16px; font-size: 14px; font-weight: 600; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; cursor: pointer; transition: background 0.15s ease; } .ds-btn-primary svg { width: 16px; height: 16px; } .ds-btn-primary:hover { background: #106B3F; } .ds-btn-primary:focus-visible { outline: 2px solid #0077C2; outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Header Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Disclosure-trigger style button (e.g. Ayuda popover trigger).",
+      "html": "<button class=\"ds-btn-secondary\" type=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">Ayuda</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; gap: 6px; border: 1px solid #E4E7EC; background: #FFFFFF; color: #1F2430; border-radius: 12px; padding: 9px 16px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease; } .ds-btn-secondary:hover { background: #F5F6F8; } .ds-btn-secondary:focus-visible { outline: 2px solid #0077C2; outline-offset: 2px; } .ds-btn-secondary[aria-expanded='true'] { border-color: #0077C2; color: #0077C2; }"
+    },
+    {
+      "name": "Status Badge (ok/warning/danger)",
+      "kind": "chip",
+      "refersTo": "chip-ok",
+      "description": "Customer classification badge; text-on-tint pairing, three color variants.",
+      "html": "<span class=\"ds-badge ds-badge-ok\">Prioritario</span>",
+      "css": ".ds-badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; text-transform: capitalize; } .ds-badge-ok { background: rgba(26,162,96,0.12); color: #137646; } .ds-badge-warning { background: rgba(183,121,31,0.12); color: #8C5D18; } .ds-badge-danger { background: rgba(209,67,67,0.12); color: #BD2E2E; }"
+    },
+    {
+      "name": "Control Value Chip",
+      "kind": "chip",
+      "refersTo": "chip-value",
+      "description": "Live value pill next to a slider label, blue tint variant of the badge pattern.",
+      "html": "<span class=\"ds-chip-value\">6 meses</span>",
+      "css": ".ds-chip-value { font-size: 13px; font-weight: 700; color: #0067A9; background: rgba(0,157,255,0.10); padding: 2px 10px; border-radius: 999px; min-width: 56px; text-align: center; display: inline-block; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Base container: gray panel on the white page canvas, ambient shadow.",
+      "html": "<div class=\"ds-card\">Card content</div>",
+      "css": ".ds-card { background: #F5F6F8; border: 1px solid #EEF0F3; border-radius: 20px; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 4px 12px rgba(16,24,40,0.06); }"
+    },
+    {
+      "name": "Select Input",
+      "kind": "input",
+      "refersTo": "select",
+      "description": "Rule-panel and table-toolbar select, white on gray card, inline SVG chevron.",
+      "html": "<select class=\"ds-select\"><option>Excluir cliente</option></select>",
+      "css": ".ds-select { appearance: none; width: 100%; padding: 12px 36px 12px 14px; border-radius: 12px; border: 1px solid #E4E7EC; background-color: #FFFFFF; color: #1F2430; font-size: 14px; font-weight: 500; cursor: pointer; box-shadow: 0 1px 2px rgba(16,24,40,0.04), 0 4px 12px rgba(16,24,40,0.06); background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%231F2430' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E\"); background-repeat: no-repeat; background-position: right 14px center; } .ds-select:focus-visible { border-color: #0077C2; outline: 2px solid rgba(0,157,255,0.18); outline-offset: 1px; }"
+    },
+    {
+      "name": "Sidebar Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link-active",
+      "description": "Icon-only 72px rail, solid blue-strong fill, translucent-white state overlays.",
+      "html": "<nav class=\"ds-sidebar\"><a class=\"ds-sidebar-link ds-active\" href=\"#\" aria-label=\"Inicio\" title=\"Inicio\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 11.5 12 4l9 7.5\"/><path d=\"M5.5 10v9a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-9\"/></svg></a></nav>",
+      "css": ".ds-sidebar { width: 72px; background: #0077C2; display: flex; flex-direction: column; align-items: center; padding: 12px; gap: 10px; } .ds-sidebar-link { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; color: rgba(255,255,255,0.72); border-radius: 10px; transition: background 0.15s ease, color 0.15s ease; } .ds-sidebar-link svg { width: 22px; height: 22px; } .ds-sidebar-link:hover { background: rgba(255,255,255,0.14); color: #FFFFFF; } .ds-sidebar-link.ds-active { background: rgba(255,255,255,0.22); color: #FFFFFF; } .ds-sidebar-link:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 2px; }"
+    },
+    {
+      "name": "Metric Tile",
+      "kind": "custom",
+      "refersTo": "card",
+      "description": "Result grid tile: circular icon badge above label+value.",
+      "html": "<div class=\"ds-card ds-metric-card\"><span class=\"ds-metric-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"8\"/><path d=\"m8.5 12.5 2.3 2.3L16 9.7\"/></svg></span><span class=\"ds-metric-label\">% Prioritarios</span><span class=\"ds-metric-value\">42%</span></div>",
+      "css": ".ds-metric-card { padding: 22px; display: flex; flex-direction: column; gap: 10px; } .ds-metric-icon { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(0,157,255,0.10); border: 1px solid rgba(0,119,194,0.22); color: #0077C2; } .ds-metric-icon svg { width: 19px; height: 19px; } .ds-metric-label { font-size: 13px; color: #5F6B78; font-weight: 500; } .ds-metric-value { font-size: 26px; font-weight: 700; color: #1F2430; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Siigo-Adjacent Cockpit",
+    "overview": "Expansion Builder borrows the retina of a real product — Siigo Nube's icon-only blue sidebar, white topbar with a wordmark and a green primary action, light-gray card panels on a white canvas — to make a one-person prototype feel like it belongs inside the tool it's simulating, without borrowing any Siigo mark, name, or copy. Everything about it says \"this is a working screen inside a SaaS,\" never \"this is a landing page.\" The blue identity color reads as navigation and selection chrome, not as a page-filling brand statement; the sidebar is the only place blue covers real area, and even there it's a darkened, WCAG-safe stand-in for the literal requested hex, not the hex itself. It is an Operate-mode tool with a synthetic, disclosed-as-fake data set: no hero imagery, no persuasive copy, no marketing surfaces. The system-font stack, disclosure popovers instead of dialogs, and a card-on-white (not card-on-gray) layering are all deliberate signals that this is a control panel someone actually uses, not a pitch.",
+    "keyCharacteristics": [
+      "Card-on-white, not white-on-gray: .card panels (#F5F6F8) sit on a pure-white page canvas — the inverse of a gray-canvas/white-card convention.",
+      "Blue is chrome, not wallpaper: the only large solid-blue fill is the 72px icon sidebar; everywhere else blue is a thin tint, ring, or accent.",
+      "Three-tier same-hue color system (base / -strong / -on-tint) exists purely to satisfy contrast math, not as a stylistic choice — each tier has one job.",
+      "Status color (green/amber/red badges) is a semantically separate channel from blue (navigation/selection/primary-action) — never conflated.",
+      "Icon language is uniform: every icon in the app is a hand-authored inline SVG, 24x24 viewBox, 1.75 stroke-width, round caps/joins — no icon font, no icon library."
+    ],
+    "rules": [
+      { "name": "The Three-Tier Hue Rule", "body": "Every accent color that needs to sit both as a solid fill and as text-on-tint gets three tokens, never one: a reference tone, a -strong tone for solid fills with light content on top, and an -on-tint tone (computed against the tint composited over --panel, not white) for text sitting on that color's own tint. Skipping a tier and reusing the reference tone in a contrast-bearing context is how a token stops being accessible.", "section": "colors" },
+      { "name": "The Status-Never-Navigation Rule", "body": "Green/amber/red badge colors classify customer status; blue governs navigation, selection, and the one primary action. The two channels never swap roles — a badge is never blue, and navigation/selection chrome is never green/amber/red.", "section": "colors" },
+      { "name": "The No-Larger-Than-Title Rule", "body": "No page-chrome text (headings, labels, body) exceeds the 22px/700 Title step; only a metric card's numeral is allowed to read larger (26px), because it is data, not a heading.", "section": "typography" },
+      { "name": "The Grid-Not-Flow Rule", "body": "Any collection of related data (rules, results, customers) lives in an explicit-column grid with a defined collapse breakpoint — never in free-flowing text.", "section": "layout" },
+      { "name": "The Ambient-Not-Structural Rule", "body": "Shadow communicates \"this is a separate surface,\" never \"this is elevated because it's interactive.\" The one exception is --shadow-pop, reserved exclusively for floating popover panels that sit above page content by definition.", "section": "elevation" },
+      { "name": "The Pill-Means-Status Rule", "body": "999px radius is reserved for elements communicating state or an active value (badges, the control-value chip) — never used on a general content container.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do carry a solid accent fill only through the -strong token (--blue-strong, --green-strong) — the reference hue (--blue, --green) is for thin accents and tints on white only.",
+      "Do compute on-tint text contrast against the actual composited background (tint over --panel), not against plain white, since every tint chip in this app renders inside a .card.",
+      "Do keep .card panels on --panel and the page canvas on --surface (white) — never invert this pairing.",
+      "Do author every icon as inline SVG at 24x24, 1.75 stroke-width, round caps/joins — no icon font, no icon library.",
+      "Do update any value derived from a slider (its chip, live-metrics bar, result tiles, detail panel) on the input event, not change or on release."
+    ],
+    "donts": [
+      "Don't use the raw --blue (#009DFF) hex as a solid fill carrying content — it falls short of 3:1 against white.",
+      "Don't recolor a status badge (ok/warning/danger) to blue, or use green/amber/red for navigation or selection chrome — the two channels stay independent.",
+      "Don't add a heavier shadow than --shadow-card to a resting card; --shadow-pop is reserved for popovers that genuinely float above content.",
+      "Don't add hero imagery, illustration, or persuasive copy — this is an Operate-mode tool with disclosed-synthetic data, not a marketing surface.",
+      "Don't treat the favicon/OG-image assets as reflecting the current identity — they still carry the prior product's mark and are a disclosed open item, not a system value."
+    ]
+  }
+}

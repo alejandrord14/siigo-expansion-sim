@@ -343,35 +343,32 @@ if (sidebar && sidebarToggle) {
   });
 }
 
-const profileBtn = document.getElementById('profile-btn');
-const profilePopover = document.getElementById('profile-popover');
+function setupPopover(btn, popover) {
+  if (!btn || !popover) return;
 
-function closeProfilePopover() {
-  if (!profilePopover) return;
-  profilePopover.hidden = true;
-  profileBtn?.setAttribute('aria-expanded', 'false');
-}
+  const close = () => {
+    popover.hidden = true;
+    btn.setAttribute('aria-expanded', 'false');
+  };
+  const open = () => {
+    popover.hidden = false;
+    btn.setAttribute('aria-expanded', 'true');
+  };
 
-function openProfilePopover() {
-  if (!profilePopover) return;
-  profilePopover.hidden = false;
-  profileBtn?.setAttribute('aria-expanded', 'true');
-}
-
-if (profileBtn && profilePopover) {
-  profileBtn.addEventListener('click', (event) => {
+  btn.addEventListener('click', (event) => {
     event.stopPropagation();
-    if (profilePopover.hidden) openProfilePopover();
-    else closeProfilePopover();
+    if (popover.hidden) open();
+    else close();
   });
 
   document.addEventListener('click', (event) => {
-    if (!profilePopover.hidden && !profilePopover.contains(event.target)) {
-      closeProfilePopover();
-    }
+    if (!popover.hidden && !popover.contains(event.target)) close();
   });
 
   document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closeProfilePopover();
+    if (event.key === 'Escape') close();
   });
 }
+
+setupPopover(document.getElementById('profile-btn'), document.getElementById('profile-popover'));
+setupPopover(document.getElementById('help-btn'), document.getElementById('help-popover'));

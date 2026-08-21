@@ -8,46 +8,48 @@ web
 
 ## Stack
 
-static HTML/CSS/JS (no framework, no build step; vanilla JS across `app.js`, `companies.js`, `rules-engine.js`)
+static HTML/CSS/JS (no framework, no build step; vanilla JS across `app.js`, `customers.js`, `rules-engine.js`)
 
 ## Users
 
-Equipos internos de Clara (fintech mexicana): producto, credit risk, fraud operations, y data science. Usan Risk Builder para simular cómo distintas reglas de crédito modificarían la aprobación, utilización, riesgo y experiencia del cliente antes de llevarlas a producción.
+Alejandro Ordóñez, exploring on his own how a module-expansion prioritization tool for a Siigo-style accounting/ERP SaaS could work: which customers are ready for their next module, and how a Customer Success or growth team might reason about that with adjustable rules instead of a fixed scoring model.
 
 ## Product Purpose
 
-Risk Builder es un sandbox de simulación: permite ajustar reglas de crédito (utilización máxima, días de mora, concentración de gasto, antigüedad mínima, acción ante fraude, tratamiento de info incompleta) y ver de inmediato cómo esas reglas afectarían una cartera de empresas. Es puramente exploratorio — no publica ni exporta reglas a producción; lo que ocurre después de una simulación (implementar la regla) sucede manualmente en otro sistema, fuera de esta herramienta.
+Expansion Builder is a sandbox of simulation: it lets you adjust prioritization rules (antigüedad mínima, actividad mínima reciente, módulos actuales mínimos, días de inactividad máxima, acción ante alerta de soporte, tratamiento de datos incompletos) and immediately see how those rules would classify a synthetic customer base into "no listo" / "a considerar" / "prioritario" for their next module offer. It is purely exploratory — it doesn't publish or export rules anywhere, and doesn't connect to any real company's customer data.
 
 ## Positioning
 
-A diferencia de discutir cambios de reglas en una hoja de cálculo o en reuniones entre equipos, Risk Builder muestra el impacto de una regla en tiempo real sobre una cartera completa, con una decisión explicable por empresa (aprobado/revisión/rechazado, línea recomendada, nivel de confianza, y el razonamiento en lenguaje natural detrás de esa decisión).
+Unlike discussing a prioritization rule in a spreadsheet or a meeting, Expansion Builder shows a rule's impact in real time across a full synthetic portfolio, with an explainable decision per customer (no listo / a considerar / prioritario, suggested next module, estimated incremental monthly value, confidence level, and the natural-language reasoning behind that decision).
 
 ## Operating Context
 
-Flujo típico: un usuario ajusta uno o más de los 6 controles del panel de reglas → las métricas de cartera (tasa de aprobación, cupo total, pérdida esperada, % en revisión, utilización promedio) se recalculan en vivo → el usuario selecciona una empresa de la cartera sintética para ver el detalle de su decisión individual y por qué se tomó. El objetivo es que distintos equipos (producto, riesgo, fraude, data science) puedan explorar juntos el mismo escenario y alinearse antes de que una regla se lleve a producción.
+Typical flow: the user adjusts one or more of the 6 rule-panel controls → portfolio metrics (% prioritarios, clientes prioritarios, ingreso incremental potencial, % a considerar, % no listos, actividad promedio) recalculate live → the user selects a customer from the synthetic table to see the detail of their individual classification and why it was reached.
 
 ## Capabilities and Constraints
 
-- Motor de reglas en el cliente (`rules-engine.js`) que evalúa cada empresa contra las 6 reglas activas y determina estado, línea de crédito recomendada, nivel de confianza, y explicación dinámica.
-- Cartera de 30 empresas sintéticas generadas de forma determinística (semilla fija) para que los resultados sean comparables entre sesiones — nunca datos reales de Clara. Esto es una decisión durable: la herramienta se queda siempre con datos sintéticos, no se conectará a datos reales o anonimizados de la cartera de Clara.
-- Sin backend ni persistencia: todo el cálculo ocurre en el navegador: recargar la página resetea cualquier ajuste a los valores por defecto.
-- Sin acción de "publicar" o "exportar" reglas: es intencionalmente un sandbox de solo exploración/decisión, no un punto de despliegue a producción.
-- La herramienta es español-only: el selector ES/EN se retiró (nunca hubo build de inglés) y quedó una etiqueta "ES" estática, no interactiva. El ícono de perfil abre un popover informativo (rol genérico + aclaración de que no hay cuentas ni autenticación real) — no es un login ni un menú de cuenta funcional.
-- Responsive: por debajo de 900px el sidebar se convierte en un menú hamburguesa (drawer deslizable con overlay); la tabla de cartera pasa de columnas fijas a tarjetas apiladas por empresa. En desktop el sidebar permanece siempre visible, sin colapsar.
+- Client-side rules engine (`rules-engine.js`) that evaluates each synthetic customer against the 6 active rules and determines status, suggested next module, estimated incremental value, confidence, and a dynamic natural-language explanation.
+- Portfolio of 30 synthetic customers generated deterministically (fixed seed) in `customers.js`, so results are comparable across sessions — never real data from any company. This is a durable decision: the tool always stays on synthetic data.
+- No backend, no persistence: all computation happens in the browser; reloading resets any adjustment to its default value.
+- No "publish" or "export" action: intentionally an exploration/decision sandbox only, not a production deployment point.
+- Spanish-only interface; the "ES" label is static, non-interactive (there never was an English build).
+- The header's "Ayuda" popover and the profile avatar popover are both informational disclosure widgets (no login, no real account, no dialog focus-trapping needed since neither holds focusable content) — the profile popover states explicitly that this is a personal prototype not connected to any real company's systems or data.
+- Responsive: below 900px the sidebar becomes a slide-in icon-only drawer over an overlay; the customer table collapses from fixed columns to stacked per-customer cards. On desktop the sidebar stays permanently visible as a narrow icon rail — it never collapses.
 
 ## Brand Commitments
 
-- Nombre del producto: "Risk Builder".
-- Paleta de marca: navy `#16213E`, teal `#17A673`, fondo `#F7F8FA`, tarjetas blancas redondeadas.
-- Favicon (`favicon.svg` + `favicon.png` de respaldo) e imagen Open Graph (`og-image.png`, 1200×630) generados a partir de estos mismos tokens: la marca "RB" en teal/navy es la única identidad visual, no hay logo de Clara en ningún asset.
+- Product name: "Expansion Builder".
+- Visual identity intentionally echoes Siigo Nube's UI conventions (solid-blue icon-only sidebar rail, white top bar with a wordmark and a green/blue primary action, light-gray card panels on a white canvas) without using any Siigo logo, trademark, or literal Siigo copy — color scheme and layout pattern only, explicitly disclosed as inspiration in the profile popover and footer.
+- Palette: brand blue `#009DFF` as the identity accent, with an accessible working shade `#0077C2` (`--blue-strong`) used wherever white content sits on a solid blue fill, since raw `#009DFF` alone falls short of WCAG contrast floors against white. Status badges (no listo / a considerar / prioritario) keep their own independent green/amber/red semantics — never recolored to blue, so classification stays legible and distinct from navigation/selection accents.
+- Favicon (`favicon.svg` + `favicon.png` fallback) and Open Graph image (`og-image.png`, 1200×630) predate this redesign and still carry the old "RB"/navy-teal mark — flagged as a known follow-up, not yet regenerated to match the new blue identity or the "Expansion Builder" name.
 
 ## Evidence on Hand
 
-Ninguna. Todos los nombres de empresas, montos, e indicadores de riesgo son sintéticos y generados por la propia herramienta (`companies.js`). No hay datos reales de Clara, testimonios, casos de estudio, ni benchmarks — trabajo futuro no debe fabricarlos ni presentarlos como reales.
+None. All customer names, module-adoption profiles, activity levels, and incremental-value estimates are synthetic, generated by the tool itself (`customers.js`, `rules-engine.js`). No real customer data, testimonials, case studies, or benchmarks from Siigo or any other company — future work must not fabricate or present any as real.
 
 ## Product Principles
 
-1. Todo ajuste de reglas debe reflejarse de inmediato en las métricas de cartera y en el detalle de la empresa seleccionada — nunca requerir un paso manual de "recalcular".
-2. Cada decisión individual (aprobado/revisión/rechazado) debe venir acompañada de una razón explicable en lenguaje natural, generada a partir de las reglas que realmente se activaron para esa empresa — nunca un texto genérico o fijo.
-3. Los datos son siempre sintéticos y deterministas: la reproducibilidad entre sesiones importa más que el realismo estadístico perfecto.
-4. La herramienta es un espacio de alineación entre equipos (producto, riesgo, fraude, data science), no un sistema de aprobación real — no debe implicar que una decisión aquí tiene efecto en producción.
+1. Every rule adjustment must reflect immediately in the portfolio metrics and in the selected customer's detail — never a manual "recalculate" step.
+2. Each individual classification (no listo / a considerar / prioritario) must come with an explainable, natural-language reason generated from the rules that actually triggered for that customer — never generic or fixed text.
+3. Data is always synthetic and deterministic: reproducibility across sessions matters more than perfect statistical realism.
+4. The tool is a personal exploration space, not a real prioritization system — it must never imply that a decision made here has any effect on a real customer or a real company's systems.

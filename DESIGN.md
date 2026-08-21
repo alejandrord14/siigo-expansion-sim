@@ -1,23 +1,31 @@
 ---
-name: Risk Builder
-description: Sandbox interno de Clara para simular reglas de crédito sobre una cartera en vivo
+name: Expansion Builder
+description: Simulador de priorización de expansión de módulos, con la retícula visual de Siigo Nube — riel azul icon-only, tarjetas gris claro sobre lienzo blanco
 colors:
-  navy: "#16213E"
-  teal: "#17A673"
-  teal-tint: "rgba(23, 166, 115, 0.12)"
-  bg: "#F7F8FA"
-  white: "#FFFFFF"
-  text-muted: "#5B6478"
-  border: "#E1E4EA"
-  amber: "#C87F0A"
-  amber-tint: "rgba(200, 127, 10, 0.12)"
-  red: "#C0392B"
-  red-tint: "rgba(192, 57, 43, 0.12)"
+  blue: "#009DFF"
+  blue-strong: "#0077C2"
+  blue-strong-hover: "#00659F"
+  blue-tint: "rgba(0, 157, 255, 0.10)"
+  blue-tint-strong: "rgba(0, 157, 255, 0.18)"
+  blue-on-tint: "#0067A9"
+  green: "#1AA260"
+  green-strong: "#15834E"
+  green-strong-hover: "#106B3F"
+  green-tint: "rgba(26, 162, 96, 0.12)"
+  green-on-tint: "#137646"
+  amber: "#B7791F"
+  amber-tint: "rgba(183, 121, 31, 0.12)"
+  amber-on-tint: "#8C5D18"
+  red: "#D14343"
+  red-tint: "rgba(209, 67, 67, 0.12)"
+  red-on-tint: "#BD2E2E"
+  surface: "#FFFFFF"
+  panel: "#F5F6F8"
+  text: "#1F2430"
+  text-muted: "#5F6B78"
+  border: "#E4E7EC"
+  border-soft: "#EEF0F3"
 typography:
-  headline:
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
-    fontSize: "32px"
-    fontWeight: 700
   title:
     fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif"
     fontSize: "22px"
@@ -32,9 +40,9 @@ typography:
     fontWeight: 600
     letterSpacing: "0.03em"
 rounded:
-  sm: "8px"
-  md: "10px"
-  lg: "16px"
+  sm: "10px"
+  md: "12px"
+  lg: "20px"
   pill: "999px"
 spacing:
   xs: "8px"
@@ -42,211 +50,210 @@ spacing:
   md: "16px"
   lg: "24px"
   xl: "32px"
-  "2xl": "48px"
+  "2xl": "40px"
 components:
   button-primary:
-    backgroundColor: "{colors.teal}"
-    textColor: "{colors.navy}"
+    backgroundColor: "{colors.green-strong}"
+    textColor: "{colors.surface}"
     rounded: "{rounded.md}"
-    padding: "14px 26px"
+    padding: "9px 16px"
+  button-primary-hover:
+    backgroundColor: "{colors.green-strong-hover}"
+    textColor: "{colors.surface}"
+    rounded: "{rounded.md}"
+    padding: "9px 16px"
   button-secondary:
-    backgroundColor: "{colors.bg}"
-    textColor: "{colors.navy}"
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.text}"
     rounded: "{rounded.md}"
-    padding: "14px 26px"
+    padding: "9px 16px"
   card:
-    backgroundColor: "{colors.white}"
+    backgroundColor: "{colors.panel}"
     rounded: "{rounded.lg}"
   chip-ok:
-    backgroundColor: "{colors.teal-tint}"
-    textColor: "{colors.teal}"
+    backgroundColor: "{colors.green-tint}"
+    textColor: "{colors.green-on-tint}"
     rounded: "{rounded.pill}"
     padding: "3px 10px"
   chip-warning:
     backgroundColor: "{colors.amber-tint}"
-    textColor: "{colors.amber}"
+    textColor: "{colors.amber-on-tint}"
     rounded: "{rounded.pill}"
     padding: "3px 10px"
   chip-danger:
     backgroundColor: "{colors.red-tint}"
-    textColor: "{colors.red}"
+    textColor: "{colors.red-on-tint}"
     rounded: "{rounded.pill}"
     padding: "3px 10px"
+  chip-value:
+    backgroundColor: "{colors.blue-tint}"
+    textColor: "{colors.blue-on-tint}"
+    rounded: "{rounded.pill}"
+    padding: "2px 10px"
   nav-link-active:
-    backgroundColor: "{colors.teal}"
-    textColor: "{colors.white}"
+    backgroundColor: "rgba(255,255,255,0.22)"
+    textColor: "{colors.surface}"
     rounded: "{rounded.sm}"
-    padding: "10px 12px"
 ---
 
-# Design System: Risk Builder
+# Design System: Expansion Builder
 
 ## Overview
 
-**Creative North Star: "The Control Room"**
+**Creative North Star: "The Siigo-Adjacent Cockpit"**
 
-Risk Builder es una consola de mando calmada: los equipos de producto, riesgo, fraude y data science de Clara mueven palancas (las 6 reglas) y observan cómo la consecuencia se propaga de inmediato por una cartera completa — tasas de aprobación, cupo, pérdida esperada, y la decisión individual de cada empresa. Nada en el sistema compite por atención con esa consecuencia: el navy institucional ancla la estructura, el teal aparece solo para señalar "esto está bien" o "esto está activo", y el resto es blanco, gris y espacio.
+Expansion Builder borrows the retina of a real product — Siigo Nube's icon-only blue sidebar, white topbar with a wordmark and a green primary action, light-gray card panels on a white canvas — to make a one-person prototype feel like it belongs inside the tool it's simulating, without borrowing any Siigo mark, name, or copy. Everything about it says "this is a working screen inside a SaaS," never "this is a landing page." The blue identity color reads as navigation and selection chrome, not as a page-filling brand statement; the sidebar is the only place blue covers real area, and even there it's a darkened, WCAG-safe stand-in for the literal requested hex, not the hex itself.
 
-Es una herramienta interna (modo Operate), no una pieza de marketing: no hay imágenes heroicas, ilustraciones ni texto persuasivo. El sistema se siente **preciso y sin fricción** — cada control responde de inmediato y sin ambigüedad, para que el usuario nunca dude si su ajuste ya se registró en las métricas o en el detalle de la empresa seleccionada.
+It is an Operate-mode tool with a synthetic, disclosed-as-fake data set: no hero imagery, no persuasive copy, no marketing surfaces. The system-font stack, disclosure popovers instead of dialogs, and a card-on-white (not card-on-gray) layering are all deliberate signals that this is a control panel someone actually uses, not a pitch.
 
 **Key Characteristics:**
-- Navy institucional como color dominante de estructura (sidebar, texto, títulos), nunca decorativo.
-- Teal escaso: solo marca lo que está activo, aprobado, o es la acción principal.
-- Plano con aire: casi sin sombra; el whitespace y el contraste tonal separan las superficies.
-- Tipografía del sistema operativo (sin fuente de marca cargada) — refuerza que esto es una herramienta de trabajo, no una superficie de marca.
-- Jerarquía servida por tamaño y peso, no por color: rojo/ámbar se reservan estrictamente para estados de riesgo.
+- Card-on-white, not white-on-gray: `.card` panels (`#F5F6F8`) sit on a pure-white page canvas — the inverse of a gray-canvas/white-card convention.
+- Blue is chrome, not wallpaper: the only large solid-blue fill is the 72px icon sidebar; everywhere else blue is a thin tint, ring, or accent.
+- Three-tier same-hue color system (base / -strong / -on-tint) exists purely to satisfy contrast math, not as a stylistic choice — each tier has one job.
+- Status color (green/amber/red badges) is a semantically separate channel from blue (navigation/selection/primary-action) — never conflated.
+- Icon language is uniform: every icon in the app is a hand-authored inline SVG, 24×24 viewBox, 1.75 stroke-width, round caps/joins — no icon font, no icon library.
 
 ## Colors
 
-Paleta de tres roles funcionales sobre una base neutra casi monocromática: institucional (navy), señal (teal), y estado (ámbar/rojo), usados con extrema disciplina.
+A brand-blue identity accent split into three same-hue tiers to satisfy contrast at each context, sitting on top of a near-monochrome white/light-gray neutral base, with an independently-governed green/amber/red status channel.
 
 ### Primary
-- **Navy Institucional** (`#16213E`): color dominante de la interfaz — fondo del sidebar, texto principal, encabezados, avatar de perfil. Transmite que las decisiones que se toman aquí importan.
+- **Brand Blue** (`#009DFF`): the literal requested identity hue. Used only for thin accents and tints on white/light backgrounds (focus outlines, table row hover, decorative borders) — never as a solid fill carrying content, because at ~2.9:1 against white it falls short of the 3:1 UI-component contrast floor.
+- **Blue Strong** (`#0077C2`): the accessible working shade (~4.75:1 on white) that carries every solid blue fill with white/light content on top — the sidebar background, avatar background, slider thumb, focus rings, active header-button border/text, selected-row chevron.
+- **Blue Tint** (`rgba(0, 157, 255, 0.10)`) / **Blue Tint Strong** (`rgba(0, 157, 255, 0.18)`): backgrounds for the control-value chip and the active-row highlight, respectively.
+- **Blue-on-Tint** (`#0067A9`): text sitting directly on a blue tint chip (the control-value pill, the selected customer's name) — computed to clear 4.5:1 against the tint as composited over `--panel`, not against plain white, since every instance of this pairing renders inside a `.card`.
 
 ### Secondary
-- **Teal Señal-Verde** (`#17A673`): el único acento de acción. Aparece en el ítem activo del menú, botones primarios, el thumb de los sliders, y el chip "ok"/aprobado. Su escasez es la señal: cuando algo es teal, es porque está bien o es la acción a tomar.
-- **Teal Tenue** (`rgba(23, 166, 115, 0.12)`): fondo tinte de teal al 12% de opacidad — usado detrás del texto teal en chips, badges y el valor activo de los sliders, nunca como color sólido de fondo grande.
+- **Green Strong** (`#15834E`): the app's one primary-action fill — the "Restablecer valores por defecto" button in the topbar. Reused from the tool's actual reset feature rather than an invented action, placed in the visual slot a Siigo-style header reserves for its green primary button.
+- **Green** (`#1AA260`) / **Green Tint** (`rgba(26,162,96,0.12)`) / **Green-on-Tint** (`#137646`): reference tier and the "ok" status badge pairing (text-on-tint) — status use only, never a page action.
 
-### Tertiary (estado)
-- **Ámbar de Alerta** (`#C87F0A`) con su tinte (`rgba(200, 127, 10, 0.12)`): reservado para "en revisión" / señales intermedias — nunca para acción ni marca.
-- **Rojo de Riesgo** (`#C0392B`) con su tinte (`rgba(192, 57, 43, 0.12)`): reservado para "rechazado" / alerta alta — el color de mayor peso semántico del sistema, por eso el más restringido.
+### Tertiary (status)
+- **Amber** (`#B7791F`) with tint (`rgba(183,121,31,0.12)`) and on-tint text (`#8C5D18`): the "a considerar" / warning badge — never a button fill, badge-only.
+- **Red** (`#D14343`) with tint (`rgba(209,67,67,0.12)`) and on-tint text (`#BD2E2E`): the "no listo" / danger badge — never a button fill, badge-only.
 
 ### Neutral
-- **Fondo de App** (`#F7F8FA`): el lienzo detrás de todas las tarjetas blancas; también el fondo de inputs y del riel de los sliders.
-- **Blanco de Superficie** (`#FFFFFF`): todas las tarjetas, la topbar, los popups de estado activo del switch de idioma.
-- **Texto Secundario** (`#5B6478`): labels, descripciones, texto de apoyo — nunca texto primario o accionable.
-- **Borde/Divisor** (`#E1E4EA`): línea de 1px para separar topbar, inputs, encabezados de tabla y bloques del panel de detalle. No hay un segundo peso de borde en el sistema.
+- **Surface** (`#FFFFFF`): the page canvas, the topbar, and any element that needs to read as one step more "recessed" inside a gray card (selects, slider track, table `thead`, detail-highlight tiles, popover panels).
+- **Panel** (`#F5F6F8`): every `.card` — the intro header, controls panel, metric tiles, table card, detail card — reads as a distinct surface against the white page.
+- **Text** (`#1F2430`): primary text — dark gray-black, deliberately not pure black.
+- **Text Muted** (`#5F6B78`): labels, descriptions, table headers, footer copy — computed to clear 4.5:1 against both white and panel.
+- **Border** (`#E4E7EC`) / **Border Soft** (`#EEF0F3`): 1px dividers; `border` for structural lines (topbar, table header, popover edge), `border-soft` for lighter internal seams (card outline, row dividers, detail-highlight tile border).
 
 ### Named Rules
-**The Scarce Teal Rule.** El teal sólido nunca cubre más del ítem activo, un botón, o un ícono a la vez. Si dos elementos teal compiten por atención en la misma vista, uno de los dos está mal.
+**The Three-Tier Hue Rule.** Every accent color that needs to sit both as a solid fill and as text-on-tint gets three tokens, never one: a reference tone, a `-strong` tone for solid fills with light content on top, and an `-on-tint` tone (computed against the tint composited over `--panel`, not white) for text sitting on that color's own tint. Skipping a tier and reusing the reference tone in a contrast-bearing context is how a token stops being accessible.
 
-**The Tint-Over-Fill Rule.** Ningún estado (ok/alerta/riesgo) se comunica con relleno sólido de color sobre fondo grande — siempre es texto de color pleno sobre un tinte del mismo color al 12% de opacidad. Esto mantiene la densidad visual baja incluso cuando una tabla o panel muestra muchos estados a la vez.
+**The Status-Never-Navigation Rule.** Green/amber/red badge colors classify customer status; blue governs navigation, selection, and the one primary action. The two channels never swap roles — a badge is never blue, and navigation/selection chrome is never green/amber/red.
 
 ## Typography
 
-**Body/Display/Label Font:** system-ui (`-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`) — una sola familia para todo el sistema.
+**Body/Display/Label Font:** system-ui (`-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`) — one family for the whole app, no font file loaded.
 
-**Character:** No hay una fuente de marca cargada; la fuente nativa del sistema operativo del usuario es una decisión deliberada, coherente con "The Control Room" — esto es una herramienta de trabajo diario, no una superficie que necesita voz tipográfica propia.
+**Character:** No brand typeface. The native OS font is a deliberate Operate-mode call — this is a working tool, not a marketing surface that needs typographic voice.
 
 ### Hierarchy
-- **Headline** (700, 32px): reservado para un título de página a escala hero si una superficie futura lo necesita; no está en uso en la página actual — el `<h1>` de la introducción se distilló a la escala `Title` (ver Do's and Don'ts) para funcionar como header de tarea compacto, no como hero.
-- **Title** (700, 22px): encabezados de sección (`<h2>` de "Panel de reglas", "Resultados", "Cartera sintética") y el `<h1>` del header de tarea en la introducción. Una variante de 18px/700 se usa para el nombre de la empresa en el panel de detalle — mismo peso, un paso más pequeño para no competir con el título de sección.
-- **Body** (500, 14px): la mayoría del texto de interfaz — labels de controles, valores de detalle, texto de tabla. El peso sube a 600-700 quirúrgicamente para lo que el usuario debe leer primero (nombre de empresa en fila activa, valores de métricas).
-- **Label** (600, 12px, uppercase, letter-spacing 0.03em): encabezados de columna de tabla y cualquier texto de clasificación de máxima densidad.
+- **Title** (700, 22px): the intro `<h1>` and every section `<h2>` ("Panel de reglas", "Resultados", "Clientes sintéticos") — the largest text in the app; there is no larger display step in use.
+- **Sub-title** (700, 18px): the selected customer's name in the detail panel header — one step down from Title so it doesn't compete with the section heading above it.
+- **Body** (500, 14px): the majority of interface text — control labels, select values, table cells, detail explanation text.
+- **Label** (600, 12px, uppercase, letter-spacing 0.03em): table column headers and the mobile stacked-card row labels (`content: attr(data-label)`).
+- **Metric Value** (700, 26px): the six result-tile numbers — the only place text scales up past Title, reserved for the headline number of a metric card.
 
 ### Named Rules
-**The No-Decoration Rule.** Ningún texto usa itálica, subrayado, o una segunda familia tipográfica. La jerarquía se logra solo con tamaño, peso y color — nunca con adornos.
+**The No-Larger-Than-Title Rule.** No page-chrome text (headings, labels, body) exceeds the 22px/700 Title step; only a metric card's numeral is allowed to read larger (26px), because it is data, not a heading.
 
 ## Layout
 
-Layout de aplicación de dos zonas: un sidebar de 240px (navy) y un área principal fluida a la derecha. Dentro del área principal, una topbar de 72px (blanco, borde inferior de 1px) antecede al contenido scrolleable.
+Two-zone app shell: a fixed 72px icon-only sidebar (blue) and a fluid main area. Inside the main area, a 72px white topbar (1px bottom border) precedes scrollable content.
 
-El contenido vive dentro de un `.container` con `max-width: 1100px` centrado y `24px` de padding lateral. Cada sección (`.controls`, `.metrics`, `.companies`) se apila verticalmente con `padding-bottom` generoso (24–64px) que crece con la importancia visual de la sección.
+Content lives in a `.container` with `max-width: 1100px`, centered, `24px` side padding. Sections (`.intro`, `.controls`, `.metrics`, `.companies`) stack vertically with generous `padding-bottom` (24–120px) that grows with how much trailing space the section needs — `.companies` carries `120px` specifically to clear the fixed footer.
 
-Los datos se organizan en grids explícitos, nunca en flujo libre:
-- Panel de reglas: grid de 2 columnas, `gap: 32px 40px` (colapsa a 1 columna bajo 640px).
-- Resultados: grid de 6 columnas, `gap: 20px` (colapsa a 3 columnas bajo 1100px, 2 columnas bajo 640px).
-- Cartera + detalle: grid `3fr 2fr`, `gap: 24px` (colapsa a 1 columna apilada bajo 900px). El panel de detalle es `position: sticky` (`top: 24px`) mientras las dos columnas están lado a lado, para que no quede un hueco vacío bajo un panel corto junto a una tabla larga; se vuelve estático (`position: static`) en el breakpoint apilado, donde ya no comparte alto con la tabla.
+Data lives in explicit grids, never free-flowing text:
+- Controls panel: 2-column grid, `gap: 32px 40px` (collapses to 1 column under 640px).
+- Results: 6-column grid, `gap: 20px` (collapses to 3 columns under 1100px, 2 columns under 640px).
+- Customers + detail: `3fr 2fr` grid, `gap: 24px` (collapses to 1 stacked column under 900px); the detail card is `position: sticky` (`top: 24px`) while side-by-side, `static` once stacked.
 
-### Responsive: sidebar → menú hamburguesa (bajo 900px)
-En desktop el sidebar es `position: sticky`, siempre visible — no colapsa nunca, ni con clic ni con ancho de pantalla, porque refuerza la filosofía "Control Room" (todo visible a la vez, sin estados ocultos) y en desktop 240px nunca es un ancho apretado.
+### Responsive: sidebar → slide-in drawer (under 900px)
+On desktop the sidebar is `position: sticky`, always visible at 72px — it never collapses regardless of width or interaction. Under 900px it becomes `position: fixed`, hidden by default (`translateX(-100%)`, 0.25s transition), and opens as a full-height drawer over a semi-transparent overlay (`rgba(16,24,40,0.4)`). A hamburger button (three bars, appears left of the wordmark) opens it; a close button inside the rail, the overlay, or Escape all close it. `body` gets `overflow: hidden` while open.
 
-Bajo 900px el sidebar pasa a `position: fixed` fuera de flujo, oculto por defecto (`transform: translateX(-100%)`, transición de 0.25s) y se revela como drawer de ancho completo (`.sidebar.open`) sobre un overlay semitransparente (`rgba(22, 33, 62, 0.4)`) que cierra el menú al hacer clic. Se abre con un botón hamburguesa (`.hamburger-btn`, tres barras navy, 40×40px) que aparece a la izquierda de la topbar junto a una marca compacta (`.mobile-brand`: mismo `.logo-mark` teal + "Risk Builder" en navy, ya que la topbar es blanca) — el sidebar completo, con su propio logo, deja de estar visible bajo este breakpoint. El drawer suma su propio botón de cierre (×) junto al logo. Cierra con: overlay, botón ×, Escape, o al elegir un link de navegación. Mientras está abierto, `body` recibe `overflow: hidden` para evitar el scroll del fondo.
+Also under 900px: header action buttons collapse to icon-only (button text hidden) and the decorative "ES" language label hides — fixed during this redesign after mobile testing surfaced the wordmark being squeezed out by three full-text buttons at narrow widths.
 
 ### Named Rules
-**The Grid-Not-Flow Rule.** Cualquier colección de datos relacionados (reglas, métricas, empresas) vive en un grid con columnas explícitas y un breakpoint de colapso definido — nunca en un flujo de texto libre.
+**The Grid-Not-Flow Rule.** Any collection of related data (rules, results, customers) lives in an explicit-column grid with a defined collapse breakpoint — never in free-flowing text.
 
 ## Elevation & Depth
 
-Plano con aire: el sistema evita la sombra como mecanismo de jerarquía. Existe exactamente una sombra ambiental (`0 2px 8px rgba(22, 33, 62, 0.06)`) que separa las tarjetas blancas del fondo `#F7F8FA` — es casi imperceptible a propósito, y no comunica interactividad ni presionabilidad, solo "esto es una superficie distinta". Dos usos adicionales, más pequeños, cumplen roles puntuales: un realce de 1px bajo el pill activo del switch de idioma (`0 1px 3px rgba(22, 33, 62, 0.12)`), y un anillo de contorno de 1px alrededor del thumb de los sliders (`0 0 0 1px rgba(22, 33, 62, 0.15)`) — este último es un borde de precisión, no una sombra de profundidad.
+Flat with light ambient lift: one primary card shadow (`--shadow-card: 0 1px 2px rgba(16,24,40,0.04), 0 4px 12px rgba(16,24,40,0.06)`) separates every `.card`, select, and the live-metrics bar from the white/gray surfaces beneath them — subtle enough to read as "distinct surface," never as "floating, pressable object." A heavier shadow (`--shadow-pop: 0 12px 32px rgba(16,24,40,0.14)`) exists solely for popover panels (help, profile), which genuinely float above page content. The mobile sidebar drawer gets its own directional shadow (`4px 0 24px rgba(16,24,40,0.18)`) as it slides over the overlay.
 
 ### Shadow Vocabulary
-- **card-ambient** (`box-shadow: 0 2px 8px rgba(22, 33, 62, 0.06)`): toda tarjeta blanca sobre el fondo de la app.
-- **active-lift** (`box-shadow: 0 1px 3px rgba(22, 33, 62, 0.12)`): el segmento activo dentro de un control segmentado (switch de idioma).
+- **shadow-card** (`0 1px 2px rgba(16,24,40,0.04), 0 4px 12px rgba(16,24,40,0.06)`): every card, select, slider track, and the live-metrics bar.
+- **shadow-pop** (`0 12px 32px rgba(16,24,40,0.14)`): popover panels (help, profile) — reserved for genuinely floating overlays.
 
 ### Named Rules
-**The Flat-by-Default Rule.** Las superficies están en reposo plano. La única sombra del sistema existe para separar, no para jerarquizar — nunca se usa sombra para simular que un elemento "flota" sobre otro con intención de interacción.
+**The Ambient-Not-Structural Rule.** Shadow communicates "this is a separate surface," never "this is elevated because it's interactive." The one exception is `shadow-pop`, reserved exclusively for floating popover panels that sit above page content by definition.
 
 ## Shapes
 
-Vocabulario de esquinas de cuatro pasos: `8px` (ítems de navegación), `10px` (botones, inputs, el marco del logo), `16px` (todas las tarjetas contenedoras — el radio "de marca" del sistema), y `999px` (pills: badges de estado, el valor activo de un slider, el switch de idioma). Un quinto valor, `12px`, aparece una sola vez en los tiles de highlight del panel de detalle — una variante menor del paso `md`, no un escalón nuevo del sistema.
+Four-step corner scale: `10px` (`--radius-sm`, small chips, sidebar nav items), `12px` (`--radius-md`, buttons, inputs, selects, detail-highlight tiles), `20px` (`--radius-lg`, every card-level container), and `999px` (pills — status badges, the control-value chip, avatar circle uses `50%` instead). This is a step up from an earlier 16px card / 10px control scale; the corner language reads slightly softer than a tighter, more institutional grid would.
 
-No hay bordes decorativos: el único borde real es la línea divisoria de 1px (`#E1E4EA`) usada para separar bloques (topbar, encabezados de tabla, secciones del panel de detalle). El avatar de perfil es el único elemento circular (`border-radius: 50%`).
+No decorative borders: `--border` (`#E4E7EC`) and the lighter `--border-soft` (`#EEF0F3`) are the only stroke weights, used for structural dividers (topbar, table header, popover edge) and lighter internal seams (card outline, row dividers) respectively. The avatar is the only fully circular element.
 
 ### Named Rules
-**The Pill-Means-Status Rule.** El radio `999px` está reservado para elementos que comunican estado o selección activa (badges, chips, valor de slider, switch de idioma) — nunca se usa en un contenedor de contenido general.
+**The Pill-Means-Status Rule.** `999px` radius is reserved for elements communicating state or an active value (badges, the control-value chip) — never used on a general content container.
 
 ## Components
 
 ### Buttons
-- **Shape:** `10px` de radio (`rounded.md`).
-- **Primary:** fondo teal sólido, texto navy (blanco sobre teal no cumple contraste WCAG AA), sin borde, `padding: 14px 26px`. Es la única acción de peso total permitida en una vista.
-- **Secondary:** fondo `bg` (`#F7F8FA`), texto navy, borde de 1px (`#E1E4EA`, igual que un input) para que se lea como botón incluso sobre una tarjeta blanca — mismo radio y padding que el primario, para que el par se lea como un grupo de decisión, no como dos componentes distintos.
-- **Hover:** `opacity: 0.9` en ambos — la única transición de estado en botones, deliberadamente sutil.
+- **Shape:** `12px` radius (`--radius-md`).
+- **Primary:** `--green-strong` solid fill, white text, no border, `padding: 9px 16px` — the app's one primary action (reset rules), in the header.
+- **Secondary (header-btn):** white background, 1px `--border`, `--text` label — used for the Ayuda disclosure trigger; on hover the background shifts to `--panel`; when its popover is open (`aria-expanded="true"`), border and text switch to `--blue-strong`.
+- **Hover/Focus:** primary darkens to `--green-strong-hover`; all interactive elements get a `2px solid --blue-strong` focus-visible outline (offset varies by context, sometimes negative for table controls to stay inside the row).
 
-### Chips / Badges (`badge-pill`)
-- **Style:** texto en color pleno sobre un tinte del mismo color al 12% de opacidad, radio `999px`, `padding: 3px 10px`, `font-size: 12px/600`.
-- **Variantes:** `ok` (teal — aprobado, identidad sin alerta, buró disponible), `warning` (ámbar — en revisión, fraude medio, historial intermedio), `danger` (rojo — rechazado, fraude alto).
-- **Uso:** siempre para valores discretos con connotación de riesgo; nunca para etiquetar contenido neutral. Un valor que alimenta la pérdida esperada pero no participa en ninguna de las 6 reglas activas (ej. variabilidad de flujo) no debe llevar color de riesgo — usa `.detail-stat` (texto `text-muted`, sin pill) para no implicar un veredicto que el sistema de reglas no está emitiendo.
+### Chips / Badges
+- **Style:** solid-color text on a 10–12%-opacity tint of the same hue, `999px` radius, `padding: 3px 10px`, `12px/600`.
+- **Variants:** `ok` (green), `warning` (amber), `danger` (red) — status only.
+- **Control-value chip:** same tint-pill pattern but in blue (`--blue-tint` / `--blue-on-tint`), showing a slider's live value next to its label, updated on every `input` event.
 
 ### Cards / Containers
-- **Corner Style:** `16px` (`rounded.lg`).
-- **Background:** blanco sólido sobre el fondo `#F7F8FA` de la app.
-- **Shadow Strategy:** `card-ambient` únicamente (ver Elevation & Depth).
-- **Border:** ninguno — la sombra y el contraste de fondo son suficientes para definir el borde de la tarjeta.
-- **Internal Padding:** varía por densidad de contenido: `40px 48px` para el header de tarea de la introducción, `40px` para el panel de reglas, `32px` para el panel de detalle, `24px` para las tarjetas de métrica, `0` cuando la tarjeta envuelve directamente una tabla con scroll propio.
+- **Corner Style:** `20px` (`--radius-lg`).
+- **Background:** `--panel` (`#F5F6F8`) on the white page canvas — the load-bearing inversion of a gray-canvas/white-card convention.
+- **Shadow Strategy:** `shadow-card` only (see Elevation & Depth).
+- **Border:** 1px `--border-soft`.
+- **Internal Padding:** varies by density — `40px 48px` (intro task header), `40px` (controls card, 24px under 900px), `32px` (detail card), `22px` (metric tiles), `0` where the card wraps a scrolling table directly.
 
-### Inputs / Fields (Select)
-- **Style:** borde de 1px (`#E1E4EA`), fondo blanco, radio `10px`, flecha inline en SVG (no fuente de íconos), `padding: 10px 14px`.
-- **Focus:** el borde cambia a teal sólido — sin glow ni anillo adicional.
-
-### Range Slider
-- **Style:** riel de `6px` de alto, color de fondo `bg`, completamente redondeado; thumb circular de `18px` en teal sólido con un borde blanco de `3px` y un anillo de precisión de `1px` (`rgba(22, 33, 62, 0.15)`).
-- **Valor actual:** se muestra en un chip pill teal-tint junto al label, actualizado en cada evento `input` — nunca solo al soltar.
+### Inputs / Fields (Select, Range)
+- **Select:** white background (one step lighter than its parent card), 1px `--border`, `12px` radius, inline SVG chevron (no icon font), `--shadow-card` ambient lift. Focus: border shifts to `--blue-strong` plus a `2px` outline in `--blue-tint-strong` — a visible ring, not just a border-color change.
+- **Range slider:** `6px` white track with an inset 1px `--border` ring, `--blue-strong` accent-color; thumb is an `18px` circle in `--blue-strong` with a `3px` white border and a soft drop shadow. Value shown live in the blue control-value chip on every `input` event, never only on release.
 
 ### Navigation (Sidebar)
-- **Style:** enlaces de `14px/500` en blanco al 65% de opacidad sobre navy; `padding: 10px 12px`, radio `8px`.
-- **Hover:** blanco al 6% de opacidad de fondo, texto sube a blanco 100%.
-- **Active:** fondo teal sólido, texto navy 100% (blanco sobre teal no cumple contraste WCAG AA) — el único uso de teal como relleno grande en todo el sistema, reservado exclusivamente para "dónde estoy".
+- **Style:** icon-only rail, `72px` wide, solid `--blue-strong` background. Four hand-authored inline-SVG icons (home / rules / results / customers), `24×24` viewBox, `1.75` stroke, round caps/joins, no text labels — each link carries `aria-label` and `title` for accessibility.
+- **Default/Hover/Active:** default icon color is white at 72% opacity; hover raises it to white 100% with a `14%`-opacity white background; active state is a `22%`-opacity white background — translucent-white overlays rather than a color swap, since the rail is already the brand color.
+- **Mobile:** under 900px the rail becomes a fixed, off-canvas drawer (`translateX(-100%)` at rest) opened by a topbar hamburger button and closed via its own close button, the overlay, or Escape.
 
-### Table (Cartera sintética)
-- **Header:** fondo `bg`, texto `label` (12px/600, uppercase, letter-spacing 0.03em, color `text-muted`), borde inferior de 1px.
-- **Rows:** borde inferior de 1px (`#F0F1F4`, una variante aún más tenue del borde estándar); filas interactivas (`company-row`) muestran cursor pointer y un fondo teal-tint al 4% en hover, 12% cuando están seleccionadas — con el nombre de la empresa cambiando a teal en la fila activa.
-- **Columnas (desktop, sobre 900px):** `table-layout: fixed` con anchos fijos por `colgroup` (Empresa 32%, Antigüedad 23%, Utilización 22%, Estado 23%), calibrados para que ningún encabezado ni badge de estado necesite envolverse y quepan sin scroll horizontal en el ancho de tarjeta típico (~617px). La columna Empresa es la única que envuelve a dos líneas cuando el nombre es largo — nunca se trunca ni obliga a desplazar la tabla. Si se agrega o quita una columna, hay que recalcular estos porcentajes.
-- **Mobile (bajo 900px):** la tabla deja de ser tabla visualmente — `thead` se oculta, cada `tr.company-row` se convierte en una tarjeta con borde (radio `12px`), y cada `td` pasa a ser una fila `label: valor` usando `content: attr(data-label)` para reponer el encabezado perdido. Mismo patrón que resolvió el scroll horizontal en desktop (nunca truncar, nunca forzar scroll), solo que aquí el problema es ancho de viewport en vez de ancho de columna.
-- **Selección en mobile (acordeón inline):** bajo 900px, `#company-detail` (la columna sticky de escritorio) se oculta por completo — tocar una fila expande su explicación directamente debajo, dentro de la misma tarjeta, en vez de navegar a un panel separado. Primer diseño fue "scroll automático hacia `#company-detail`"; se descartó porque el salto de posición se sentía ajeno al tocar, y comparar dos empresas exigía scrollear abajo-arriba-abajo repetidamente. El acordeón resuelve ambos: cero salto, y comparar es tap/tap/tap en el mismo lugar.
-  - Cada `tr.company-row` va seguida de un `tr.company-detail-row` (misma tabla, `colspan="4"`), oculto vía `[hidden]` y con el contenido vacío hasta que se expande — `renderCompaniesTable()` solo llama a `buildCompanyDetailHTML()` para la fila con `id === selectedCompanyId`, así no se computan 30 explicaciones en cada render.
-  - `selectCompanyRow` reutiliza `selectedCompanyId` para ambas cosas (fila activa en desktop, fila expandida en mobile) — no hay estado duplicado. Bajo 900px, tocar la fila ya expandida la colapsa (`selectedCompanyId = null`); en desktop no colapsa (la columna sticky siempre necesita alguna empresa seleccionada o el estado vacío).
-  - **Indicador de expandir (`.expand-chevron`):** un chevron de 8px (borde en L rotado, sin SVG) junto al nombre de la empresa, visible solo bajo 900px. Apunta hacia abajo en reposo, se invierte y cambia a teal cuando la fila está activa — sin esto, nada en la tarjeta sugería que se podía tocar para ver más.
-  - Como `renderCompaniesTable()` reemplaza el `innerHTML` completo del `tbody` en cada tap, `selectCompanyRow` termina con `.focus()` sobre la fila reseleccionada — si no, el foco de teclado se perdería en cada interacción, rompiendo la navegación por teclado del P0 original.
+### Topbar
+- **Style:** `72px` tall, white, 1px bottom border. Left: hamburger (mobile only) + plain-text wordmark ("Expansion Builder", no logo asset). Right: static "ES" label (non-interactive, Spanish-only app), an Ayuda disclosure-popover button, the green primary reset button, and the profile avatar popover.
+- **Popovers:** both Ayuda and the profile menu are plain disclosure widgets — trigger button with `aria-haspopup`/`aria-expanded`/`aria-controls`, panel toggled via the `hidden` attribute, no `role="dialog"` and no focus trap, because neither panel holds focusable content. `shadow-pop` + `20px` radius + 1px `--border`.
 
-### Topbar Controls
-- **Idioma:** la app es español-only; `.lang-label` es texto plano (`text-muted`, 13px/600) sin chrome de botón — nunca simular un control interactivo para una opción que no existe.
-- **Perfil (`.profile-popover`):** al hacer clic en el avatar se abre una tarjeta `card`-like (radio `16px`, `card-ambient` shadow, `280px` de ancho) anclada bajo el avatar (`position: absolute`, `right: 0`). Contenido: avatar grande + "Prototipo personal de Alejandro Ordóñez" + una nota explícita de que no está conectado a ningún sistema real de Clara ni tiene autenticación. Esta redacción es deliberada, no cosmética: "Usuario interno" ambiguaba por una fracción de segundo si el prototipo tenía algún tipo de acceso real a sistemas de Clara — la copia actual lo niega sin dejar espacio a esa lectura. Cierra con clic afuera, Escape, o clic de nuevo en el avatar.
+### Table (Clientes sintéticos)
+- **Header:** white `thead` (one step lighter than the table's card), `label` typography (12px/600 uppercase, `text-muted`), 1px `--border` bottom.
+- **Rows:** 1px `--border-soft` bottom; interactive rows show pointer cursor, a faint blue-tint hover (`rgba(0,157,255,0.05)`), and `--blue-tint-strong` when selected, with the customer name switching to `--blue-on-tint` on the active row.
+- **Columns (desktop):** `table-layout: fixed` via `colgroup` (Cliente 32%, Antigüedad 23%, Actividad 22%, Estado 23%) — calibrated so no header or badge wraps or forces horizontal scroll.
+- **Mobile (under 900px):** `thead` hides; each row becomes a bordered, `12px`-radius card with `label: value` rows via `content: attr(data-label)` — never truncates, never forces scroll.
 
-### Live Metrics Bar (`.live-metrics-bar`)
-Franja con tres métricas clave (tasa de aprobación, cupo total, pérdida esperada) que vive dentro de la tarjeta de Panel de reglas, entre el `.section-heading` y `.controls-card` — no es un elemento de página aparte. Existe porque en mobile (una sola columna, seis controles apilados) mover un slider y ver su efecto en Resultados implicaba scrollear de ida y vuelta; esta franja trae el resultado al control en vez de mandar al usuario a buscarlo.
-
-Primera versión usaba `position: fixed` + `IntersectionObserver` sobre `#controls`, anclada a toda la página. Se descartó por dos razones: competía visualmente con la topbar (ambas reclamando `top: 0` en el instante en que la barra aparecía), y `IntersectionObserver` es una de las piezas más difíciles de verificar remotamente (su entrega de eventos se limita agresivamente en pestañas sin foco, que es exactamente el entorno de prueba disponible aquí). La versión actual usa `position: sticky` — mismo mecanismo ya probado en el panel de detalle — dentro del flujo normal de `#controls`. Esto resuelve ambos problemas a la vez: nunca puede solaparse con la topbar porque, por orden del documento, la topbar ya salió de pantalla mucho antes de llegar a `#controls`; y desaparece en Resultados automáticamente porque deja de existir en el rango de scroll de su contenedor — sin JS, sin observer, sin condición de carrera.
-
-Reutiliza `formatPercent`/`formatCurrency` dentro de `renderMetrics()`, así que nunca se desincroniza de las tarjetas de Resultados.
-
-### Page Footer
-Línea de atribución (`.page-footer`): "Construido por Alejandro Ordóñez tras nuestra conversación: prototipo exploratorio, no vinculado a datos reales de Clara." Cumple dos funciones: da contexto de autoría/procedencia que de otro modo la página no tiene, y refuerza el mismo encuadre de "prototipo personal" del popover de perfil — por eso es `position: fixed` (`bottom: 0`, fondo blanco, borde superior de 1px, texto `text-muted` 12px) en vez de vivir solo al final del documento: la aclaración de que esto no es un sistema real de Clara debe verse sin depender de que alguien haga scroll hasta el final. Bajo 900px pierde el offset de `left: 240px` (el sidebar ya no ocupa ese espacio en flujo). `.companies` compensa con `padding-bottom: 120px` para que el footer fijo nunca tape la última fila de la tabla. Vive fuera de `.intro` a propósito — la introducción se mantiene puramente funcional (Don't: "no copy persuasivo"); la atribución personal no es parte de la tarea, así que vive en el footer, no en el header de tarea.
-
-### Metric / Stat Tile (Resultados, highlights del detalle)
-- **Style:** las tarjetas de métrica son `card` estándar con `padding: 24px`; el label va arriba en `text-muted` 13px, el valor abajo en navy 26px/700. Los highlights dentro del panel de detalle (línea recomendada, confianza) usan la misma jerarquía pero en miniatura, sobre un fondo `bg` en vez de blanco, para diferenciarlos visualmente de una tarjeta de primer nivel.
+### Metric / Stat Tile (Resultados)
+- **Style:** standard `.card` with `22px` padding; a `40px` circular icon badge (`--blue-tint` background, `--blue-strong` icon, 1px subtle border) sits above the label+value pair — same hand-authored SVG icon language as the sidebar, added to the pre-existing tile layout rather than a restructure. Label is `13px` muted, value is `26px/700` in `--text`.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** usar teal sólido únicamente para el ítem activo de navegación, botones primarios, y el thumb del slider — en cualquier otro lugar, usa el tinte al 12%.
-- **Do** mantener el radio `16px` para toda tarjeta contenedora de primer nivel; reserva `999px` estrictamente para elementos de estado o selección.
-- **Do** representar cada estado de riesgo (ok/alerta/rechazo) con el par texto-pleno + tinte-12%, nunca con relleno sólido de color.
-- **Do** actualizar cualquier valor derivado (chip de slider, métricas, panel de detalle) en el evento `input`, no en `change` ni al soltar — la respuesta inmediata es el punto central de "Sala de Control".
+- **Do** carry a solid accent fill only through the `-strong` token (`--blue-strong`, `--green-strong`) — the reference hue (`--blue`, `--green`) is for thin accents and tints on white only.
+- **Do** compute on-tint text contrast against the actual composited background (tint over `--panel`), not against plain white, since every tint chip in this app renders inside a `.card`.
+- **Do** keep `.card` panels on `--panel` and the page canvas on `--surface` (white) — never invert this pairing.
+- **Do** author every icon as inline SVG at `24×24`, `1.75` stroke-width, round caps/joins — no icon font, no icon library.
+- **Do** update any value derived from a slider (its chip, live-metrics bar, result tiles, detail panel) on the `input` event, not `change` or on release.
 
 ### Don't:
-- **Don't** introducir un segundo color de acento que compita con el teal por la acción primaria.
-- **Don't** usar sombras más pesadas que `card-ambient` (`0 2px 8px rgba(22, 33, 62, 0.06)`) — rompe el sistema "plano con aire".
-- **Don't** bajar el texto de body por debajo de `14px` ni el de label por debajo de `12px`, ni quitar el uppercase/letter-spacing de los labels — es lo que mantiene legible una interfaz densa en datos tabulares.
-- **Don't** agregar imágenes heroicas, ilustraciones, o copy persuasivo — Risk Builder es una herramienta interna (modo Operate), no una superficie de marketing.
+- **Don't** use the raw `--blue` (`#009DFF`) hex as a solid fill carrying content — it falls short of 3:1 against white.
+- **Don't** recolor a status badge (ok/warning/danger) to blue, or use green/amber/red for navigation or selection chrome — the two channels stay independent.
+- **Don't** add a heavier shadow than `--shadow-card` to a resting card; `--shadow-pop` is reserved for popovers that genuinely float above content.
+- **Don't** add hero imagery, illustration, or persuasive copy — this is an Operate-mode tool with disclosed-synthetic data, not a marketing surface.
+- **Don't** treat the favicon/OG-image assets as reflecting the current identity — see below.
+
+**Known open item, not part of the system:** `favicon.svg`, `favicon.png`, and `og-image.png` still carry the prior product's "RB" mark and navy/teal colors. This is a disclosed follow-up defect, not a color or mark to canonize — the system's actual identity color is blue/green as documented above, and these assets are pending regeneration to match it.
