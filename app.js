@@ -372,3 +372,9 @@ function setupPopover(btn, popover) {
 
 setupPopover(document.getElementById('profile-btn'), document.getElementById('profile-popover'));
 setupPopover(document.getElementById('help-btn'), document.getElementById('help-popover'));
+
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && document.activeElement?.classList.contains('tooltip-trigger')) {
+    document.activeElement.blur();
+  }
+});

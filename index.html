@@ -141,7 +141,16 @@
 
                 <div class="control">
                   <div class="control-label">
-                    <label for="antiguedad-minima">Antigüedad mínima</label>
+                    <span class="label-group">
+                      <label for="antiguedad-minima">Antigüedad mínima</label>
+                      <span class="tooltip">
+                        <button type="button" class="tooltip-trigger" aria-describedby="tip-antiguedad-minima">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="8" r="0.75" fill="currentColor" stroke="none"/></svg>
+                          <span class="sr-only">Qué significa Antigüedad mínima</span>
+                        </button>
+                        <span class="tooltip-bubble" id="tip-antiguedad-minima" role="tooltip">Meses mínimos que el cliente debe llevar activo para considerarlo listo para un nuevo módulo.</span>
+                      </span>
+                    </span>
                     <span class="control-value" id="antiguedad-minima-value">6 meses</span>
                   </div>
                   <input
@@ -157,7 +166,16 @@
 
                 <div class="control">
                   <div class="control-label">
-                    <label for="actividad-minima">Actividad mínima reciente</label>
+                    <span class="label-group">
+                      <label for="actividad-minima">Actividad mínima reciente</label>
+                      <span class="tooltip">
+                        <button type="button" class="tooltip-trigger" aria-describedby="tip-actividad-minima">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="8" r="0.75" fill="currentColor" stroke="none"/></svg>
+                          <span class="sr-only">Qué significa Actividad mínima reciente</span>
+                        </button>
+                        <span class="tooltip-bubble" id="tip-actividad-minima" role="tooltip">Porcentaje mínimo de actividad/uso reciente que debe tener el cliente para ser considerado.</span>
+                      </span>
+                    </span>
                     <span class="control-value" id="actividad-minima-value">50%</span>
                   </div>
                   <input
@@ -173,7 +191,16 @@
 
                 <div class="control">
                   <div class="control-label">
-                    <label for="modulos-minimos">Módulos actuales mínimos</label>
+                    <span class="label-group">
+                      <label for="modulos-minimos">Módulos actuales mínimos</label>
+                      <span class="tooltip">
+                        <button type="button" class="tooltip-trigger" aria-describedby="tip-modulos-minimos">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="8" r="0.75" fill="currentColor" stroke="none"/></svg>
+                          <span class="sr-only">Qué significa Módulos actuales mínimos</span>
+                        </button>
+                        <span class="tooltip-bubble" id="tip-modulos-minimos" role="tooltip">Cantidad mínima de módulos que el cliente ya debe tener contratados antes de ofrecerle uno nuevo.</span>
+                      </span>
+                    </span>
                     <span class="control-value" id="modulos-minimos-value">1 módulo(s)</span>
                   </div>
                   <input
@@ -189,7 +216,16 @@
 
                 <div class="control">
                   <div class="control-label">
-                    <label for="dias-inactividad-maxima">Días de inactividad máxima</label>
+                    <span class="label-group">
+                      <label for="dias-inactividad-maxima">Días de inactividad máxima</label>
+                      <span class="tooltip">
+                        <button type="button" class="tooltip-trigger" aria-describedby="tip-dias-inactividad-maxima">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="8" r="0.75" fill="currentColor" stroke="none"/></svg>
+                          <span class="sr-only">Qué significa Días de inactividad máxima</span>
+                        </button>
+                        <span class="tooltip-bubble" id="tip-dias-inactividad-maxima" role="tooltip">Máximo de días sin actividad reciente permitidos; por encima de este umbral, el cliente se marca como no listo.</span>
+                      </span>
+                    </span>
                     <span class="control-value" id="dias-inactividad-maxima-value">30 días</span>
                   </div>
                   <input
@@ -205,7 +241,16 @@
 
                 <div class="control">
                   <div class="control-label">
-                    <label for="accion-alerta-soporte">Acción ante alerta de soporte</label>
+                    <span class="label-group">
+                      <label for="accion-alerta-soporte">Acción ante alerta de soporte</label>
+                      <span class="tooltip">
+                        <button type="button" class="tooltip-trigger" aria-describedby="tip-accion-alerta-soporte">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="8" r="0.75" fill="currentColor" stroke="none"/></svg>
+                          <span class="sr-only">Qué significa Acción ante alerta de soporte</span>
+                        </button>
+                        <span class="tooltip-bubble" id="tip-accion-alerta-soporte" role="tooltip">Qué hacer con un cliente que tiene una alerta de soporte activa: excluirlo, bajar su prioridad, marcarlo para revisión de Customer Success, o reducir el valor incremental estimado.</span>
+                      </span>
+                    </span>
                   </div>
                   <select id="accion-alerta-soporte">
                     <option value="excluir">Excluir cliente</option>
@@ -217,7 +262,16 @@
 
                 <div class="control">
                   <div class="control-label">
-                    <label for="tratamiento-datos-incompletos">Tratamiento de datos incompletos</label>
+                    <span class="label-group">
+                      <label for="tratamiento-datos-incompletos">Tratamiento de datos incompletos</label>
+                      <span class="tooltip">
+                        <button type="button" class="tooltip-trigger" aria-describedby="tip-tratamiento-datos-incompletos">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5"/><circle cx="12" cy="8" r="0.75" fill="currentColor" stroke="none"/></svg>
+                          <span class="sr-only">Qué significa Tratamiento de datos incompletos</span>
+                        </button>
+                        <span class="tooltip-bubble" id="tip-tratamiento-datos-incompletos" role="tooltip">Qué hacer cuando no hay datos de uso reciente disponibles: excluir al cliente, considerarlo con un valor reducido, solicitar más datos, o marcarlo para revisión manual.</span>
+                      </span>
+                    </span>
                   </div>
                   <select id="tratamiento-datos-incompletos">
                     <option value="excluir">Excluir cliente</option>
