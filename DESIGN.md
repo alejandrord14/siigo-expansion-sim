@@ -254,6 +254,5 @@ No decorative borders: `--border` (`#E4E7EC`) and the lighter `--border-soft` (`
 - **Don't** recolor a status badge (ok/warning/danger) to blue, or use green/amber/red for navigation or selection chrome — the two channels stay independent.
 - **Don't** add a heavier shadow than `--shadow-card` to a resting card; `--shadow-pop` is reserved for popovers that genuinely float above content.
 - **Don't** add hero imagery, illustration, or persuasive copy — this is an Operate-mode tool with disclosed-synthetic data, not a marketing surface.
-- **Don't** treat the favicon/OG-image assets as reflecting the current identity — see below.
 
-**Known open item, not part of the system:** `favicon.svg`, `favicon.png`, and `og-image.png` still carry the prior product's "RB" mark and navy/teal colors. This is a disclosed follow-up defect, not a color or mark to canonize — the system's actual identity color is blue/green as documented above, and these assets are pending regeneration to match it.
+`favicon.svg`, `favicon.png`, and `og-image.png` were regenerated to match this system: the "EB" mark on `--blue-strong` (#0077C2) with white text, and the OG card uses `--blue-strong` as its base with a `--blue`/`--green-strong` decorative glow — no more "RB"/navy-teal leftovers from the prior product.
